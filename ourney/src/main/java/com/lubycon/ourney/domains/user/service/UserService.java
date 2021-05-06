@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 @RequiredArgsConstructor
 @Service
 public class UserService {
