@@ -100,7 +100,6 @@ public class JwtUtil {
 
     public String decode(String token) {
         String[] splitToken = token.split("\\.");
-        log.info(splitToken[1]);
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] decodedBytes = decoder.decode(splitToken[1]);
 

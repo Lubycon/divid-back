@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Getter
@@ -17,7 +18,8 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 45, nullable = false)
+    @NotNull
+    @Column(length = 45)
     private String tripName;
 
     @Temporal(TemporalType.DATE)
@@ -31,7 +33,7 @@ public class Trip {
 
     private boolean endYn = false;
 
-    @Column(nullable = false)
+    @NotNull
     private Long ownerId;
 
     @Builder

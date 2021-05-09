@@ -1,5 +1,6 @@
 package com.lubycon.ourney.domains.user.controller;
 
+import com.lubycon.ourney.common.dto.SimpleSuccessResponse;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.service.JwtUtil;
 import com.lubycon.ourney.domains.user.service.UserService;
@@ -31,13 +32,13 @@ public class UserController {
 
     @ApiOperation("USER 저장")
     @PostMapping(value="/login")
-    public ResponseEntity<Long> login(@RequestBody LoginRequest request, HttpServletResponse res) {
+    public ResponseEntity<SimpleSuccessResponse> login(@RequestBody LoginRequest request, HttpServletResponse res) {
         TokenResponse response = userService.login(request);
         userService.updateToken(response);
         res.addHeader("jwtAccessToken",response.getAccessToken());
         res.addHeader("jwtRefreshToken",response.getRefreshToken());
-
-        return ResponseEntity.ok().body(response.getId());
+        SimpleSuccessResponse successResponse = new SimpleSuccessResponse("회원가입 완료 되었습니다.");
+        return ResponseEntity.ok().body(successResponse);
     }
 
 }
