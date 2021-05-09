@@ -1,18 +1,22 @@
 package com.lubycon.ourney.common.config;
 
+import com.lubycon.ourney.common.config.interceptor.JwtAuthInterceptor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
+@Slf4j
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-/*
+
+    private final JwtAuthInterceptor jwtAuthInterceptor;
+
+    public WebConfig(JwtAuthInterceptor jwtAuthInterceptor) {
+        this.jwtAuthInterceptor = jwtAuthInterceptor;
+    }
+
     private String[] INTERCEPTOR_WHITE_LIST = {
-            "/users/signUp",
-            "/users/signIn",
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v2/api-docs",
@@ -20,13 +24,13 @@ public class WebConfig implements WebMvcConfigurer {
             "/oauth/**",
             "/kakao/**",
             "/users/login",
-            "/users/login/oauth"
+            "/users/login/oauth",
     };
-
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(new JwtAuthInterceptor())
-                .addPathPatterns("/**")
+        log.info("#########INTERCEPTOR##########");
+        registry.addInterceptor(jwtAuthInterceptor)
+                .addPathPatterns("/trips**")
                 .excludePathPatterns(INTERCEPTOR_WHITE_LIST);
     }
 
@@ -36,5 +40,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
-*/
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("GET", "POST")
+                .exposedHeaders("jwtAccessToken","jwtRefreshToken")
+                .maxAge(3000);
+    }
 }

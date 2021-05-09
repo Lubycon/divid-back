@@ -1,4 +1,4 @@
-package com.lubycon.ourney.domains.user.domain;
+package com.lubycon.ourney.domains.user.entity;
 
 import lombok.*;
 
@@ -14,7 +14,6 @@ public class User {
     private Long kakaoId;
     @Column(length = 45)
     private String email;
-    private String accessToken;
     private String refreshToken;
     private String name;
     private String profileImg;
@@ -27,8 +26,7 @@ public class User {
         this.profileImg = profileImg;
     }
 
-    public void update(String accessToken, String refreshToken){
-        this.accessToken = accessToken;
+    public void update(String refreshToken){
         this.refreshToken = refreshToken;
     }
 

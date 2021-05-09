@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
-import com.lubycon.ourney.domains.user.domain.User;
-import com.lubycon.ourney.domains.user.domain.UserRepository;
+import com.lubycon.ourney.domains.user.entity.User;
+import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -28,7 +29,8 @@ public class UserService {
             String token = jwtUtil.createToken(userId);
             String refreshToken = jwtUtil.createRefreshToken(userId);
             return new TokenResponse(userId, token, refreshToken);
-        } else { // 신규 회원 가입 -> 입력 값 저장 후 토큰 전달
+        }
+        else { // 신규 회원 가입 -> 입력 값 저장 후 토큰 전달
             User user = User.builder()
                     .kakaoId(request.getKakaoId())
                     .name(request.getName())
@@ -40,7 +42,6 @@ public class UserService {
             Long userId = userRepository.findIdByKakaoId(request.getKakaoId());
             String token = jwtUtil.createToken(userId);
             String refreshToken = jwtUtil.createRefreshToken(userId);
-
             return new TokenResponse(userId, token, refreshToken);
         }
     }
@@ -67,7 +68,6 @@ public class UserService {
             }
 
             JsonElement element = JsonParser.parseString(result);
-
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
@@ -85,6 +85,6 @@ public class UserService {
     public void updateToken(TokenResponse response){
         User user = userRepository.findById(response.getId())
                 .orElseThrow(()-> new IllegalArgumentException("해당 사용자가 없습니다. "+response.getId()));
-        user.update(response.getAccessToken(), response.getRefreshToken());
+        user.update(response.getRefreshToken());
     }
 }

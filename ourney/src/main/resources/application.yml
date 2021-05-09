@@ -17,4 +17,7 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
 
+jwt:
+  issuer: SYJ_ISSUE
+  secret: SeCRetKeYSeCRetKeYSeCRetKeYSeCRetKeYSeCRetKeYSeCRetKeYSeCRetKeYSeCRetKeY
   #  org.hibernate.type: trace

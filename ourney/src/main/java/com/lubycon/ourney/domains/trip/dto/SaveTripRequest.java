@@ -9,6 +9,7 @@ import java.util.*;
 @Data
 public class SaveTripRequest {
     private String tripNm;
+    private Long ownerId;
     private Date startDate;
     private Date endDate;
 }

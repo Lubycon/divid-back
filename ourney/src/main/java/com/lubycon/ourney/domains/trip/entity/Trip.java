@@ -1,14 +1,16 @@
 package com.lubycon.ourney.domains.trip.entity;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @Entity
 public class Trip {
     @Id
@@ -29,14 +31,19 @@ public class Trip {
 
     private boolean endYn = false;
 
-  //  @Column(nullable = false)
-    private Long ownerIdx;
+    @Column(nullable = false)
+    private Long ownerId;
 
     @Builder
-    public Trip(String tripName, Date startDate, Date endDate){
+    public Trip(String tripName, Long ownerId, Date startDate, Date endDate){
         this.tripName = tripName;
+        this.ownerId = ownerId;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public void update(String url){
+        this.url = url;
     }
 
 }
