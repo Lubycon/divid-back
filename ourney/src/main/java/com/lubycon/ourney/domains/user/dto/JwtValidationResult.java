@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class JwtValidationResult {
     @NotNull
-    Long id;
+    private Long id;
     @NotNull
-    boolean validation;
+    private boolean validation;
 }

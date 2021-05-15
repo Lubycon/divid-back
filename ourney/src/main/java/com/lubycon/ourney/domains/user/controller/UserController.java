@@ -1,22 +1,16 @@
 package com.lubycon.ourney.domains.user.controller;
 
-import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.config.interceptor.LoginId;
 import com.lubycon.ourney.common.exception.SimpleSuccessResponse;
-import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.dto.MypageRequest;
 import com.lubycon.ourney.domains.user.service.UserService;
-import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/users")
 @RestController

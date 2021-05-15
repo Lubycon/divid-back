@@ -26,7 +26,7 @@ public class JwtService {
     @Autowired
     private UserService userService;
 
-    private final Long accessExpiredTime= 1000 * 60L * 60L; // 토큰 유효 시간 (1시간)
+    private final Long accessExpiredTime= Duration.ofHours(1).toMillis();
     private final Long refreshExpiredTime = Duration.ofDays(30).toMillis();
 
     private JwtUtil jwtUtil;

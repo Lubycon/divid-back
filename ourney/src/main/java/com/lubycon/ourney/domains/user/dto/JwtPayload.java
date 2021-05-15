@@ -1,8 +1,6 @@
 package com.lubycon.ourney.domains.user.dto;
-
+import org.jetbrains.annotations.NotNull;
 import lombok.Getter;
-
-import javax.validation.constraints.NotNull;
 
 @Getter
 public class JwtPayload {

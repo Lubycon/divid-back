@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
-@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtAuthInterceptor implements HandlerInterceptor {
@@ -55,7 +54,6 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
         Gson gson = new Gson();
         JwtPayload jwtPayload = gson.fromJson(accessTokenDecode, JwtPayload.class);
         String refreshTokenInDBMS = userRepository.findRefreshTokenById(jwtPayload.getId());
-        log.info("DBMS:"+refreshTokenInDBMS);
         if(refreshTokenInDBMS.equals(jwtRefreshToken)) {
             TokenResponse tokenResponse = jwtService.issue(jwtPayload.getId());
             response.addHeader(Constants.JWT_ACCESS_TOKEN, tokenResponse.getAccessToken());
