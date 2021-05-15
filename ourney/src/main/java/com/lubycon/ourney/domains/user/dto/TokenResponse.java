@@ -1,21 +1,16 @@
 package com.lubycon.ourney.domains.user.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class TokenResponse {
-    private Long id;
+    @NotNull
+    private Long userId;
+    @NotNull
     private String accessToken;
+    @NotNull
     private String refreshToken;
-
-    @Builder
-    public TokenResponse(Long id, String accessToken, String refreshToken){
-        this.id = id;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
 }

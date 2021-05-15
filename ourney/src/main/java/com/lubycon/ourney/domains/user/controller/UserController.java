@@ -1,8 +1,11 @@
 package com.lubycon.ourney.domains.user.controller;
 
-import com.lubycon.ourney.common.dto.SimpleSuccessResponse;
+import com.lubycon.ourney.common.Constants;
+import com.lubycon.ourney.common.ResponseMessages;
+import com.lubycon.ourney.common.config.interceptor.LoginId;
+import com.lubycon.ourney.common.exception.SimpleSuccessResponse;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
-import com.lubycon.ourney.domains.user.service.JwtUtil;
+import com.lubycon.ourney.domains.user.dto.MypageRequest;
 import com.lubycon.ourney.domains.user.service.UserService;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import io.swagger.annotations.ApiOperation;
@@ -19,26 +22,27 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class UserController {
     private final UserService userService;
-    private final JwtUtil jwtUtil;
 
-    @ApiOperation("카카오로 계속하기")
-    @GetMapping(value="/login")
-    public ResponseEntity<LoginRequest> login(@RequestHeader("accessToken") String accessToken) {
-        log.info("카카오 accessToken : "+accessToken);
-        LoginRequest userInfo = userService.getUserInfo(accessToken);
-        log.info(userInfo.getKakaoId().toString());
-        return ResponseEntity.ok().body(userInfo);
+    @ApiOperation("마이페이지 조회")
+    @GetMapping("/mypage")
+    public ResponseEntity<MypageRequest> getUser(@LoginId long id) {
+        return ResponseEntity.ok().body(userService.getUser(id));
     }
 
-    @ApiOperation("USER 저장")
-    @PostMapping(value="/login")
-    public ResponseEntity<SimpleSuccessResponse> login(@RequestBody LoginRequest request, HttpServletResponse res) {
-        TokenResponse response = userService.login(request);
-        userService.updateToken(response);
-        res.addHeader("jwtAccessToken",response.getAccessToken());
-        res.addHeader("jwtRefreshToken",response.getRefreshToken());
-        SimpleSuccessResponse successResponse = new SimpleSuccessResponse("회원가입 완료 되었습니다.");
-        return ResponseEntity.ok().body(successResponse);
+    @ApiOperation("마이페이지 수정")
+    @PutMapping("/mypage")
+    public ResponseEntity<SimpleSuccessResponse> updateUser(
+            @LoginId long id,
+            @RequestBody MypageRequest mypageRequest
+    ) {
+        userService.updateUser(id, mypageRequest);
+        return ResponseEntity.ok().body(new SimpleSuccessResponse(ResponseMessages.SUCCESS_UPDATE_USER));
     }
 
+    @ApiOperation("회원 탈퇴")
+    @PostMapping("/withdrawal")
+    public ResponseEntity<SimpleSuccessResponse> withdrawal(@LoginId long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok().body(new SimpleSuccessResponse(ResponseMessages.SUCCESS_WITHDRAWAL));
+    }
 }

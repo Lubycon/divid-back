@@ -13,30 +13,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(name = "kakao_id", nullable = false)
     private Long kakaoId;
 
-    @NotNull
-    @Column(length = 45)
+    @Column(name = "email", length = 45, nullable = false)
     private String email;
 
+    @Column(name = "refresh_token")
     private String refreshToken;
 
-    private String name;
+    @Column(name = "nickname", nullable = false)
+    private String nickName;
 
-    @NotNull
-    private String profileImg;
+    @Column(name = "profile", nullable = false)
+    private String profile;
 
     @Builder
-    public User(Long kakaoId, String name, String email,String profileImg){
+    public User(Long kakaoId, String nickName, String email,String profile){
         this.kakaoId = kakaoId;
-        this.name = name;
+        this.nickName = nickName;
         this.email = email;
-        this.profileImg = profileImg;
+        this.profile = profile;
     }
 
-    public void update(String refreshToken){
+    public void updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
     }
 
+    public void updateMyInfo(String nickName, String profile){
+        this.nickName = nickName;
+        this.profile = profile;
+    }
 }

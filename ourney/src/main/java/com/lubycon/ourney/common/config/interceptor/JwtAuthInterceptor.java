@@ -1,67 +1,67 @@
 package com.lubycon.ourney.common.config.interceptor;
 
 import com.google.gson.Gson;
+import com.lubycon.ourney.common.Constants;
+import com.lubycon.ourney.common.ResponseMessages;
+import com.lubycon.ourney.domains.user.dto.JwtValidationResult;
+import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.dto.JwtPayload;
-import com.lubycon.ourney.domains.user.service.JwtUtil;
+import com.lubycon.ourney.domains.user.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtAuthInterceptor implements HandlerInterceptor {
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private UserRepository userRepository;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws IllegalArgumentException {
-        log.info("####### Interceptor preHandle Start!!!");
-        String jwtAccessToken = request.getHeader("jwtAccessToken");
-        String jwtRefreshToken = request.getHeader("jwtRefreshToken");
-        if(jwtRefreshToken == null) {
-            if(jwtAccessToken != null && jwtAccessToken.length() > 0) {
-                if((Boolean) jwtUtil.validate(jwtAccessToken, 0).get("validation")){
-                    response.addHeader("id",jwtUtil.validate(jwtAccessToken, 0).get("id").toString());
-                    return true;}
-                else throw new IllegalArgumentException("Access Token Error!!!");
+        String jwtAccessToken = request.getHeader(Constants.JWT_ACCESS_TOKEN);
+        String jwtRefreshToken = request.getHeader(Constants.JWT_REFRESH_TOKEN);
+
+        // 액세스 토큰이 만료되지 않아, 액세스 토큰만 보내는 경우
+        if (!Objects.isNull(jwtAccessToken) && Objects.isNull(jwtRefreshToken)) {
+            JwtValidationResult validateResult = jwtService.validate(jwtAccessToken);
+            if(validateResult.isValidation()){
+                request.setAttribute(Constants.HEADER_ID, validateResult.getId().toString());
             }else {
-                throw new IllegalArgumentException("No Access Token!!!");
+                throw new IllegalArgumentException(ResponseMessages.TOKEN_ERROR);
             }
-        }else {
-            // AccessToken 만료
-            if((Boolean) jwtUtil.validate(jwtRefreshToken, 1).get("validation")) {
-                String accessTokenDecode = jwtUtil.decode(jwtRefreshToken);
-                Gson gson = new Gson();
-                log.info("ACCESS: "+accessTokenDecode);
-                JwtPayload jwtPayload = gson.fromJson(accessTokenDecode, JwtPayload.class);
-
-                String refreshTokenInDBMS = userRepository.findRefreshTokenById(jwtPayload.getId());
-
-                if(refreshTokenInDBMS.equals(jwtRefreshToken)) {
-                    String newToken = jwtUtil.createToken(jwtPayload.getId());
-                    log.info("재발급 완료 ");
-                    response.addHeader("accessToken", newToken);
-                    response.addHeader("id",jwtUtil.validate(newToken, 0).get("id").toString());
-                }else {
-                    throw new IllegalArgumentException("Refresh Token Error!!!");
-                }
-                return true;
-            }else {
-                throw new IllegalArgumentException("Refresh Token Error!!!");
+        } else {
+            JwtValidationResult validateResult = jwtService.validate(jwtRefreshToken);
+            if(validateResult.isValidation()) {
+                reissueToken(response,jwtRefreshToken);
+                request.setAttribute(Constants.HEADER_ID, validateResult.getId().toString());
+            } else {
+                throw new IllegalArgumentException(ResponseMessages.TOKEN_ERROR);
             }
         }
-
+        return true;
     }
 
+    public void reissueToken(HttpServletResponse response, String jwtRefreshToken){
+        String accessTokenDecode = jwtService.decode(jwtRefreshToken);
+        Gson gson = new Gson();
+        JwtPayload jwtPayload = gson.fromJson(accessTokenDecode, JwtPayload.class);
+        String refreshTokenInDBMS = userRepository.findRefreshTokenById(jwtPayload.getId());
+        log.info("DBMS:"+refreshTokenInDBMS);
+        if(refreshTokenInDBMS.equals(jwtRefreshToken)) {
+            TokenResponse tokenResponse = jwtService.issue(jwtPayload.getId());
+            response.addHeader(Constants.JWT_ACCESS_TOKEN, tokenResponse.getAccessToken());
+            response.addHeader(Constants.JWT_REFRESH_TOKEN, tokenResponse.getRefreshToken());
+        }else {
+            throw new IllegalArgumentException(ResponseMessages.TOKEN_ERROR);
+        }
+    }
 }
-

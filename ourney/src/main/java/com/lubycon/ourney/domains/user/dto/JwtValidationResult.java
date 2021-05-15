@@ -1,13 +1,14 @@
 package com.lubycon.ourney.domains.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
-
 @Getter
-public class JwtPayload {
+@AllArgsConstructor
+public class JwtValidationResult {
     @NotNull
-    private Long id;
+    Long id;
     @NotNull
-    private String issuer;
+    boolean validation;
 }

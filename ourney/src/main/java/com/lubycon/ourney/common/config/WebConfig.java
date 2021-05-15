@@ -1,37 +1,33 @@
 package com.lubycon.ourney.common.config;
 
+import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.common.config.interceptor.JwtAuthInterceptor;
+import com.lubycon.ourney.common.config.interceptor.UserArgumentResolver;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.*;
 
+import java.util.List;
+
 @Slf4j
+@RequiredArgsConstructor
 @Configuration
-@EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
     private final JwtAuthInterceptor jwtAuthInterceptor;
+    private final UserArgumentResolver userArgumentResolver;
 
-    public WebConfig(JwtAuthInterceptor jwtAuthInterceptor) {
-        this.jwtAuthInterceptor = jwtAuthInterceptor;
-    }
-
-    private String[] INTERCEPTOR_WHITE_LIST = {
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/v2/api-docs",
-            "/webjars/**",
-            "/oauth/**",
-            "/kakao/**",
-            "/users/login",
-            "/users/login/oauth",
-    };
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        log.info("#########INTERCEPTOR##########");
         registry.addInterceptor(jwtAuthInterceptor)
-                .addPathPatterns("/trips**")
-                .excludePathPatterns(INTERCEPTOR_WHITE_LIST);
+                .addPathPatterns("/trips**","/users/**");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(userArgumentResolver);
     }
 
     // Swagger 허용
@@ -45,7 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedMethods("GET", "POST")
-                .exposedHeaders("jwtAccessToken","jwtRefreshToken")
+                .exposedHeaders(Constants.JWT_ACCESS_TOKEN,Constants.JWT_REFRESH_TOKEN)
                 .maxAge(3000);
     }
 }

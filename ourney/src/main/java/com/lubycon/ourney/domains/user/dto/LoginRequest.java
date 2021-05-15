@@ -1,22 +1,30 @@
 package com.lubycon.ourney.domains.user.dto;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginRequest {
+    @NotNull
     private Long kakaoId;
+    @Nullable
     private String email;
-    private String name;
-    private String profileImg;
+    @NotNull
+    private String nickName;
+    @NotNull
+    private String profile;
+    @NotNull
+    private boolean isMember;
+
     @Builder
-    public LoginRequest(Long kakaoId, String email, String name, String profileImg){
+    public LoginRequest(Long kakaoId, String email, String nickName, String profile, boolean isMember){
         this.kakaoId = kakaoId;
         this.email = email;
-        this.name = name;
-        this.profileImg = profileImg;
+        this.nickName = nickName;
+        this.profile = profile;
+        this.isMember = isMember;
     }
 }
