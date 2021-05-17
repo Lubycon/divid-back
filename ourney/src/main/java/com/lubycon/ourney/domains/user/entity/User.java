@@ -1,9 +1,11 @@
 package com.lubycon.ourney.domains.user.entity;
 
+import com.lubycon.ourney.domains.trip.entity.UserTripMap;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
@@ -11,6 +13,7 @@ import javax.validation.constraints.NotNull;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "kakao_id", nullable = false)
@@ -25,15 +28,18 @@ public class User {
     @Column(name = "nickname", nullable = false)
     private String nickName;
 
-    @Column(name = "profile", nullable = false)
-    private String profile;
+    @Column(name = "profile_img", nullable = false)
+    private String profileImg;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserTripMap> userTripMaps = new ArrayList<>();
 
     @Builder
-    public User(Long kakaoId, String nickName, String email,String profile){
+    public User(Long kakaoId, String nickName, String email,String profileImg){
         this.kakaoId = kakaoId;
         this.nickName = nickName;
         this.email = email;
-        this.profile = profile;
+        this.profileImg = profileImg;
     }
 
     public void updateRefreshToken(String refreshToken){
@@ -42,6 +48,6 @@ public class User {
 
     public void updateMyInfo(String nickName, String profile){
         this.nickName = nickName;
-        this.profile = profile;
+        this.profileImg = profile;
     }
 }

@@ -8,4 +8,5 @@ public final class Constants {
     public static final String LOCAL_TRIP_URL = "http://localhost:8080/trips/";
 
     public static final String HEADER_ID = "id";
+    public static final String INVITE_CODE = "inviteCode";
 }

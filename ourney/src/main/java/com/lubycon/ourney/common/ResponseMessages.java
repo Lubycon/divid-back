@@ -9,4 +9,5 @@ public class ResponseMessages {
     public static final String SUCCESS_UPDATE_USER = "회원 정보 수정이 완료 되었습니다.";
     public static final String SUCCESS_WITHDRAWAL = "회원 탈퇴 완료 되었습니다.";
 
+    public static String SUCCESS_CREATE_TRIP = "여행 생성 완료 되었습니다.";
 }

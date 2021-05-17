@@ -8,12 +8,11 @@ import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.exception.ApiException;
 import com.lubycon.ourney.common.exception.ExceptionEnum;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
-import com.lubycon.ourney.domains.user.dto.MypageRequest;
+import com.lubycon.ourney.domains.user.dto.UserInfoDto;
 import com.lubycon.ourney.domains.user.entity.User;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -30,7 +28,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public TokenResponse login(LoginRequest request) {
-        log.info("@@UserService.login");
         Long userId = userRepository.findIdByKakaoId(request.getKakaoId());
         return jwtService.issue(userId);
     }
@@ -40,7 +37,7 @@ public class UserService {
                 .kakaoId(request.getKakaoId())
                 .nickName(request.getNickName())
                 .email(request.getEmail())
-                .profile(request.getProfile())
+                .profileImg(request.getProfile())
                 .build();
         userRepository.save(user);
 
@@ -95,16 +92,16 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(Long userId, MypageRequest request){
+    public void updateUser(Long userId, UserInfoDto request){
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
         user.updateMyInfo(request.getNickName(),request.getProfile());
     }
 
-    public MypageRequest getUser(Long userId) {
+    public UserInfoDto getUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
-        return new MypageRequest(user.getNickName(), user.getProfile());
+        return new UserInfoDto(user.getNickName(), user.getProfileImg());
     }
 
     @Transactional
