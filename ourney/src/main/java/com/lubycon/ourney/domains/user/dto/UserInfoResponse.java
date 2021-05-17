@@ -8,14 +8,14 @@ import org.springframework.lang.Nullable;
 
 @Getter
 @NoArgsConstructor
-public class UserInfoDto {
+public class UserInfoResponse {
     @Nullable
     private String nickName;
     @Nullable
     private String profile;
 
     @Builder
-    public UserInfoDto(String nickName, String profile){
+    public UserInfoResponse(String nickName, String profile){
         this.nickName = nickName;
         this.profile = profile;
     }

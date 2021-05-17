@@ -15,7 +15,8 @@ public interface TripRepository extends JpaRepository<Trip, UUID> {
 
     @Query("SELECT new com.lubycon.ourney.domains.trip.dto.TripListResponse(T.tripId, T.tripName, T.startDate, T.endDate, T.isEnded)" +
             "FROM Trip T INNER JOIN UserTripMap M " +
-            "ON T.tripId = M.trip.tripId where M.user.id = :userId")
+            "ON T.tripId = M.trip.tripId " +
+            "WHERE M.user.id = :userId")
     List<TripListResponse> findAllByUserId(@Param("userId") Long userId);
 
     @Query("SELECT COUNT(M.user.id) FROM UserTripMap M WHERE M.trip.tripId = :tripId")

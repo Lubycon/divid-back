@@ -1,6 +1,6 @@
 package com.lubycon.ourney.domains.trip.dto;
 
-import com.lubycon.ourney.domains.user.dto.UserInfoDto;
+import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -20,15 +20,15 @@ public class TripResponse {
     @NotNull
     private LocalDate endDate;
     @NotNull
-    private List<UserInfoDto> userInfoDtoList;
+    private List<UserInfoResponse> userInfoResponseList;
 
     @Builder
-    public TripResponse(UUID tripId, String tripName, LocalDate startDate, LocalDate endDate, List<UserInfoDto> userInfoDtoList){
+    public TripResponse(UUID tripId, String tripName, LocalDate startDate, LocalDate endDate, List<UserInfoResponse> userInfoResponseList){
         this.tripId = tripId;
         this.tripName = tripName;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.userInfoDtoList = userInfoDtoList;
+        this.userInfoResponseList = userInfoResponseList;
     }
 
 }

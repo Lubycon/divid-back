@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -17,8 +16,7 @@ import java.util.*;
 public class Trip {
     @Id
     @Type(type = "uuid-char")
-    @GeneratedValue//(generator = "uuid2")
-    //@GenericGenerator(name = "trip_id", strategy = "uuid2")
+    @GeneratedValue
     private UUID tripId;
 
     @Column(name = "trip_name", length = 45, nullable = false)

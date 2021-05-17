@@ -3,7 +3,7 @@ package com.lubycon.ourney.domains.user.controller;
 import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.config.interceptor.LoginId;
 import com.lubycon.ourney.common.exception.SimpleSuccessResponse;
-import com.lubycon.ourney.domains.user.dto.UserInfoDto;
+import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import com.lubycon.ourney.domains.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class UserController {
 
     @ApiOperation("마이페이지 조회")
     @GetMapping("/mypage")
-    public ResponseEntity<UserInfoDto> getUser(@LoginId long id) {
+    public ResponseEntity<UserInfoResponse> getUser(@LoginId long id) {
         return ResponseEntity.ok().body(userService.getUser(id));
     }
 
@@ -27,9 +27,9 @@ public class UserController {
     @PutMapping("/mypage")
     public ResponseEntity<SimpleSuccessResponse> updateUser(
             @LoginId long id,
-            @RequestBody UserInfoDto userInfoDto
+            @RequestBody UserInfoResponse userInfoResponse
     ) {
-        userService.updateUser(id, userInfoDto);
+        userService.updateUser(id, userInfoResponse);
         return ResponseEntity.ok().body(new SimpleSuccessResponse(ResponseMessages.SUCCESS_UPDATE_USER));
     }
 

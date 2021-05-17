@@ -30,18 +30,6 @@ public class TripController {
     private final TripService tripService;
     private final UserTripMapService userTripMapService;
 
-    @ApiOperation("여행 생성")
-    @PostMapping("")
-    public ResponseEntity<SimpleSuccessResponse> createTrip(
-            @LoginId long id,
-            @RequestBody CreateTripRequest createTripRequest
-    ) {
-        UUID tripId = tripService.saveTrip(id, createTripRequest);
-        tripService.updateUrl(tripId);
-        userTripMapService.saveMap(id, tripId);
-        return ResponseEntity.ok(new SimpleSuccessResponse(ResponseMessages.SUCCESS_CREATE_TRIP));
-    }
-
     @ApiOperation("여행 리스트 조회")
     @GetMapping("/all")
     public ResponseEntity<List<TripListResponse>> getTripList(@LoginId long id) {
@@ -55,5 +43,17 @@ public class TripController {
             return ResponseEntity.ok(tripService.getTrip(tripId));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @ApiOperation("여행 생성")
+    @PostMapping("")
+    public ResponseEntity<SimpleSuccessResponse> createTrip(
+            @LoginId long id,
+            @RequestBody CreateTripRequest createTripRequest
+    ) {
+        UUID tripId = tripService.saveTrip(id, createTripRequest);
+        tripService.updateUrl(tripId);
+        userTripMapService.saveMap(id, tripId);
+        return ResponseEntity.ok(new SimpleSuccessResponse(ResponseMessages.SUCCESS_CREATE_TRIP));
     }
 }

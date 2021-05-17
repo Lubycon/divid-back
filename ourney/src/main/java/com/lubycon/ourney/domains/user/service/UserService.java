@@ -8,7 +8,7 @@ import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.exception.ApiException;
 import com.lubycon.ourney.common.exception.ExceptionEnum;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
-import com.lubycon.ourney.domains.user.dto.UserInfoDto;
+import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import com.lubycon.ourney.domains.user.entity.User;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
@@ -92,16 +92,16 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(Long userId, UserInfoDto request){
+    public void updateUser(Long userId, UserInfoResponse request){
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
         user.updateMyInfo(request.getNickName(),request.getProfile());
     }
 
-    public UserInfoDto getUser(Long userId) {
+    public UserInfoResponse getUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
-        return new UserInfoDto(user.getNickName(), user.getProfileImg());
+        return new UserInfoResponse(user.getNickName(), user.getProfileImg());
     }
 
     @Transactional
