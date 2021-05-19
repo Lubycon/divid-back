@@ -5,7 +5,6 @@ import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import java.time.Duration;
 
-@Slf4j
 @Service
 public class JwtService {
     @Value("${jwt.issuer}")
@@ -58,7 +56,7 @@ public class JwtService {
         }
         return result;
     }
-
+    
     public String decode(String token) {
         return jwtUtil.decode(token);
     }
