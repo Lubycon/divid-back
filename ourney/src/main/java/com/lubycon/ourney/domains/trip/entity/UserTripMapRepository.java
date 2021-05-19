@@ -21,4 +21,9 @@ public interface UserTripMapRepository extends JpaRepository<UserTripMap, Long> 
             "FROM UserTripMap M " +
             "WHERE M.trip.tripId = :tripId")
     List<UserInfoResponse> findAllByTripId(@Param("tripId") UUID tripId);
+
+    @Query("SELECT m " +
+            "FROM UserTripMap m " +
+            "WHERE m.trip.tripId = :tripId ")
+    List<UserTripMap> findAllEntityByTripId(@Param("tripId") UUID tripId);
 }

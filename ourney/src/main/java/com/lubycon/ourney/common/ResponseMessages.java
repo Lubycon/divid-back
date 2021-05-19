@@ -12,4 +12,5 @@ public class ResponseMessages {
     public static String SUCCESS_CREATE_TRIP = "여행 생성 완료 되었습니다.";
     public static String SUCCESS_UPDATE_TRIP = "여행 수정 완료 되었습니다.";
     public static String SUCCESS_EXIT_TRIP = "여행 나가기 완료 되었습니다.";
+    public static String SUCCESS_DELETE_TRIP = "여행 삭제 완료 되었습니다.";
 }

@@ -99,4 +99,13 @@ public class TripService {
                 .orElseThrow(() -> new TripNotFoundException(tripId+", "+id+" 값에 해당하는 여행이 없습니다."));
         userTripMapRepository.delete(userTripMap);
     }
+
+    @Transactional
+    public void deleteTrip(UUID tripId) {
+        List<UserTripMap> userTripMapList = userTripMapRepository.findAllEntityByTripId(tripId);
+        for(UserTripMap userTripMap : userTripMapList){
+            userTripMapRepository.delete(userTripMap);
+        }
+        tripRepository.deleteById(tripId);
+    }
 }

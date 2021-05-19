@@ -61,11 +61,20 @@ public class TripController {
 
     @ApiOperation("여행 나가기")
     @PostMapping("/exit")
-    public ResponseEntity<SimpleSuccessResponse> exit(
+    public ResponseEntity<SimpleSuccessResponse> exitTrip(
             @LoginId long id,
             @RequestParam("tripId") UUID tripId) {
         tripService.exitTrip(id, tripId);
         return ResponseEntity.ok().body(new SimpleSuccessResponse(ResponseMessages.SUCCESS_EXIT_TRIP));
     }
+
+    @ApiOperation("여행 삭제")
+    @DeleteMapping("")
+    public ResponseEntity<SimpleSuccessResponse> deleteTrip(
+            @RequestParam("tripId") UUID tripId) {
+        tripService.deleteTrip(tripId);
+        return ResponseEntity.ok().body(new SimpleSuccessResponse(ResponseMessages.SUCCESS_DELETE_TRIP));
+    }
+
 
 }
