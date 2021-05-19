@@ -5,17 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
-
 @Getter
 @NoArgsConstructor
-public class UserInfoRequest {
+public class UserInfoResponse {
     @Nullable
     private String nickName;
     @Nullable
     private String profile;
 
     @Builder
-    public UserInfoRequest(String nickName, String profile){
+    public UserInfoResponse(String nickName, String profile){
         this.nickName = nickName;
         this.profile = profile;
     }

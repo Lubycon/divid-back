@@ -1,5 +1,6 @@
 package com.lubycon.ourney.domains.trip.entity;
 
+import com.lubycon.ourney.domains.user.dto.UserInfoRequest;
 import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

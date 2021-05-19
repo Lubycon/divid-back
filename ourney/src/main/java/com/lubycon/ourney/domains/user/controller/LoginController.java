@@ -2,7 +2,7 @@ package com.lubycon.ourney.domains.user.controller;
 
 import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.common.ResponseMessages;
-import com.lubycon.ourney.common.exception.SimpleSuccessResponse;
+import com.lubycon.ourney.common.error.SimpleSuccessResponse;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import com.lubycon.ourney.domains.user.service.UserService;

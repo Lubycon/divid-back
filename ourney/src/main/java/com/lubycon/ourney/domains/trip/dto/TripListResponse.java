@@ -1,10 +1,12 @@
 package com.lubycon.ourney.domains.trip.dto;
 
+import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,20 +20,23 @@ public class TripListResponse {
     @NotNull
     private LocalDate endDate;
     @NotNull
-    private boolean isEnd;
+    private boolean end;
     @NotNull
     private Long memberCnt;
+    @NotNull
+    private List<UserInfoResponse> userInfoResponseList;
 
     @Builder
-    public TripListResponse(UUID tripId, String tripName, LocalDate startDate, LocalDate endDate, boolean isEnd){
+    public TripListResponse(UUID tripId, String tripName, LocalDate startDate, LocalDate endDate, boolean end){
         this.tripId = tripId;
         this.tripName = tripName;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.isEnd = isEnd;
+        this.end = end;
     }
 
-    public void updateMemberCnt(Long memberCnt){
+    public void updateTripInfo(Long memberCnt, List<UserInfoResponse> userInfoResponseList){
         this.memberCnt = memberCnt;
+        this.userInfoResponseList = userInfoResponseList;
     }
 }

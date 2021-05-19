@@ -1,4 +1,4 @@
-package com.lubycon.ourney.common.exception;
+package com.lubycon.ourney.common.error;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

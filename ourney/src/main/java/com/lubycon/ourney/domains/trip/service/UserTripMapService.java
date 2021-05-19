@@ -1,11 +1,10 @@
 package com.lubycon.ourney.domains.trip.service;
 
-import com.lubycon.ourney.common.exception.ApiException;
-import com.lubycon.ourney.common.exception.ExceptionEnum;
 import com.lubycon.ourney.domains.trip.entity.Trip;
 import com.lubycon.ourney.domains.trip.entity.TripRepository;
 import com.lubycon.ourney.domains.trip.entity.UserTripMap;
 import com.lubycon.ourney.domains.trip.entity.UserTripMapRepository;
+import com.lubycon.ourney.domains.trip.exception.TripNotFoundException;
 import com.lubycon.ourney.domains.user.entity.User;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +21,10 @@ public class UserTripMapService {
 
     public void saveMap(long id, UUID tripId){
         User user = userRepository.findById(id)
-                .orElseThrow(()-> new ApiException(ExceptionEnum.NOT_FOUND_EXCEPTION));
+                .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
 
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(()-> new ApiException(ExceptionEnum.NOT_FOUND_EXCEPTION));
+                .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
 
         UserTripMap userTripMap = UserTripMap.builder()
                 .user(user)

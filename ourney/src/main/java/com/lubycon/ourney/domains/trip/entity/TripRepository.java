@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface TripRepository extends JpaRepository<Trip, UUID> {
     @Query("SELECT T.tripId FROM Trip T WHERE T.tripName = :tripName AND T.ownerId = :ownerId")
-    UUID findIdbyTripName(@Param("tripName") String tripName, @Param("ownerId") Long ownerId);
+    UUID findIdByTripName(@Param("tripName") String tripName, @Param("ownerId") Long ownerId);
 
     @Query("SELECT new com.lubycon.ourney.domains.trip.dto.TripListResponse(T.tripId, T.tripName, T.startDate, T.endDate, T.isEnded)" +
             "FROM Trip T INNER JOIN UserTripMap M " +

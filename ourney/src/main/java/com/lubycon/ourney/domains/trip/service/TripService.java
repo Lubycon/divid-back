@@ -1,8 +1,6 @@
 package com.lubycon.ourney.domains.trip.service;
 
 import com.lubycon.ourney.common.Constants;
-import com.lubycon.ourney.common.exception.ApiException;
-import com.lubycon.ourney.common.exception.ExceptionEnum;
 import com.lubycon.ourney.domains.trip.dto.CreateTripRequest;
 import com.lubycon.ourney.domains.trip.dto.TripListResponse;
 import com.lubycon.ourney.domains.trip.dto.TripResponse;
@@ -10,6 +8,9 @@ import com.lubycon.ourney.domains.trip.entity.Trip;
 import com.lubycon.ourney.domains.trip.entity.TripRepository;
 import com.lubycon.ourney.domains.trip.entity.UserTripMap;
 import com.lubycon.ourney.domains.trip.entity.UserTripMapRepository;
+import com.lubycon.ourney.domains.trip.exception.TripAccessDeniedException;
+import com.lubycon.ourney.domains.trip.exception.TripNotFoundException;
+import com.lubycon.ourney.domains.user.dto.UserInfoRequest;
 import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,16 +31,18 @@ public class TripService {
     public List<TripListResponse> getTripList(long id) {
         List<TripListResponse> tripListResponseList = tripRepository.findAllByUserId(id);
         for(TripListResponse tripListResponse : tripListResponseList){
-            tripListResponse.updateMemberCnt(tripRepository.findByTripId(tripListResponse.getTripId()));
+            List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripListResponse.getTripId());
+            tripListResponse.updateTripInfo(tripRepository.findByTripId(tripListResponse.getTripId()), userInfoResponseList);
         }
+
         return tripListResponseList;
     }
 
     public TripResponse getTrip(UUID tripId){
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(()-> new ApiException(ExceptionEnum.NOT_FOUND_EXCEPTION));
+                .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
         List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
-        return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getStartDate(), trip.getEndDate(), userInfoResponseList);
+        return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), userInfoResponseList);
     }
 
     public UUID saveTrip(long userId, CreateTripRequest createTripRequest) {
@@ -52,34 +55,36 @@ public class TripService {
                 .ownerId(userId)
                 .build();
         tripRepository.save(trip);
-        return tripRepository.findIdbyTripName(createTripRequest.getTripName(), userId);
+        return tripRepository.findIdByTripName(createTripRequest.getTripName(), userId);
     }
 
     public boolean checkTripStatus(LocalDate startDate, LocalDate endDate){
         LocalDate localDate = LocalDate.now();
         if(localDate.isAfter(startDate) && localDate.isBefore(endDate)) {
             return false;
-        }else
+        }else {
             return true;
+        }
     }
 
     @Transactional
     public void updateUrl(UUID tripId) {
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(()-> new ApiException(ExceptionEnum.NOT_FOUND_EXCEPTION));
+                .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
         trip.updateUrl(Constants.LOCAL_TRIP_URL+tripId.toString().replace("-",""));
     }
 
-    public boolean checkTripAuth(long id, UUID tripId, String inviteCode){
+    @Transactional
+    public void checkTripAuth(long id, UUID tripId, String inviteCode) throws TripAccessDeniedException {
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(()-> new ApiException(ExceptionEnum.NOT_FOUND_EXCEPTION));
+                .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
         Optional<UserTripMap> userTripMap = userTripMapRepository.findUserTripMapByTripAndUser(id, trip.getTripId());
-        if(trip.getInviteCode().equals(inviteCode) && !userTripMap.isEmpty()){ return true;}
-        else if(trip.getInviteCode().equals(inviteCode) && userTripMap.isEmpty()){
+        if(trip.getInviteCode().equals(inviteCode) && userTripMap.isEmpty()){
             enrollTrip(id, tripId);
-            return true;
         }
-        else return false;
+        else if(!trip.getInviteCode().equals(inviteCode)){
+            throw new TripAccessDeniedException(id);
+        }
     }
 
     @Transactional

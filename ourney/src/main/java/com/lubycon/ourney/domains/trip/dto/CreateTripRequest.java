@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 
 @Getter
-@NoArgsConstructor
 public class CreateTripRequest {
     @NotNull
     private String tripName;

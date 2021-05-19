@@ -31,7 +31,7 @@ public class Trip {
     @Column(name = "invite_code", nullable = false)
     private String inviteCode;
 
-    @Column(name = "ownerId", nullable = false)
+    @Column(name = "owner_id", nullable = false)
     private Long ownerId;
 
     @Column(name = "url")
