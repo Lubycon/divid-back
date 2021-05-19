@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorCode {
-
-    // Common
     ENTITY_NOT_FOUND("Entity Not Found"),
     INVALID_VALUE_ERROR("Invalid Value"),
     INTERNAL_SERVER_ERROR("Server Error"),

@@ -4,13 +4,11 @@ import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.common.config.interceptor.JwtAuthInterceptor;
 import com.lubycon.ourney.common.config.interceptor.UserArgumentResolver;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

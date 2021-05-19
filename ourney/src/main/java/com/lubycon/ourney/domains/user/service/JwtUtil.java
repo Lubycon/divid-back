@@ -1,14 +1,12 @@
 package com.lubycon.ourney.domains.user.service;
 
 import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
 import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 class JwtUtil {
     private final String ISSUER;
     private final String SECRET;
@@ -43,7 +41,6 @@ class JwtUtil {
 
         return jwt;
     }
-
 
     public String decode(String token) {
         String[] splitToken = token.split("\\.");
