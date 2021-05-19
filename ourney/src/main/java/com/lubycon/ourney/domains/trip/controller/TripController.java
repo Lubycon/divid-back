@@ -6,6 +6,7 @@ import com.lubycon.ourney.common.config.interceptor.LoginId;
 import com.lubycon.ourney.common.error.SimpleSuccessResponse;
 import com.lubycon.ourney.domains.trip.dto.CreateTripRequest;
 import com.lubycon.ourney.domains.trip.dto.TripListResponse;
+import com.lubycon.ourney.domains.trip.dto.UpdateTripRequest;
 import com.lubycon.ourney.domains.trip.exception.TripAccessDeniedException;
 import com.lubycon.ourney.domains.trip.service.TripService;
 import com.lubycon.ourney.domains.trip.service.UserTripMapService;
@@ -44,8 +45,27 @@ public class TripController {
             @RequestBody CreateTripRequest createTripRequest
     ) {
         UUID tripId = tripService.saveTrip(id, createTripRequest);
-        tripService.updateUrl(tripId);
         userTripMapService.saveMap(id, tripId);
         return ResponseEntity.ok(new SimpleSuccessResponse(ResponseMessages.SUCCESS_CREATE_TRIP));
     }
+
+    @ApiOperation("여행 정보 수정")
+    @PutMapping("")
+    public ResponseEntity<SimpleSuccessResponse> updateTrip(
+            @RequestParam("tripId") UUID tripId,
+            @RequestBody UpdateTripRequest updateTripRequest
+            ){
+        tripService.updateTripInfo(tripId, updateTripRequest);
+        return ResponseEntity.ok(new SimpleSuccessResponse(ResponseMessages.SUCCESS_UPDATE_TRIP));
+    }
+
+    @ApiOperation("여행 나가기")
+    @PostMapping("/exit")
+    public ResponseEntity<SimpleSuccessResponse> exit(
+            @LoginId long id,
+            @RequestParam("tripId") UUID tripId) {
+        tripService.exitTrip(id, tripId);
+        return ResponseEntity.ok().body(new SimpleSuccessResponse(ResponseMessages.SUCCESS_EXIT_TRIP));
+    }
+
 }

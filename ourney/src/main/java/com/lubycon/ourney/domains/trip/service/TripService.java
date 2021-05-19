@@ -4,13 +4,13 @@ import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.domains.trip.dto.CreateTripRequest;
 import com.lubycon.ourney.domains.trip.dto.TripListResponse;
 import com.lubycon.ourney.domains.trip.dto.TripResponse;
+import com.lubycon.ourney.domains.trip.dto.UpdateTripRequest;
 import com.lubycon.ourney.domains.trip.entity.Trip;
 import com.lubycon.ourney.domains.trip.entity.TripRepository;
 import com.lubycon.ourney.domains.trip.entity.UserTripMap;
 import com.lubycon.ourney.domains.trip.entity.UserTripMapRepository;
 import com.lubycon.ourney.domains.trip.exception.TripAccessDeniedException;
 import com.lubycon.ourney.domains.trip.exception.TripNotFoundException;
-import com.lubycon.ourney.domains.user.dto.UserInfoRequest;
 import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,7 +51,7 @@ public class TripService {
                 .startDate(createTripRequest.getStartDate())
                 .endDate(createTripRequest.getEndDate())
                 .inviteCode(createTripRequest.getEnterCode())
-                .isEnded(checkTripStatus(createTripRequest.getStartDate(), createTripRequest.getEndDate()))
+                .end(checkTripStatus(createTripRequest.getStartDate(), createTripRequest.getEndDate()))
                 .ownerId(userId)
                 .build();
         tripRepository.save(trip);
@@ -68,17 +68,10 @@ public class TripService {
     }
 
     @Transactional
-    public void updateUrl(UUID tripId) {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
-        trip.updateUrl(Constants.LOCAL_TRIP_URL+tripId.toString().replace("-",""));
-    }
-
-    @Transactional
     public void checkTripAuth(long id, UUID tripId, String inviteCode) throws TripAccessDeniedException {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
-        Optional<UserTripMap> userTripMap = userTripMapRepository.findUserTripMapByTripAndUser(id, trip.getTripId());
+        Optional<UserTripMap> userTripMap = userTripMapRepository.findUserTripMapByUserAndTrip(id, trip.getTripId());
         if(trip.getInviteCode().equals(inviteCode) && userTripMap.isEmpty()){
             enrollTrip(id, tripId);
         }
@@ -90,5 +83,20 @@ public class TripService {
     @Transactional
     public void enrollTrip(long id, UUID tripId) {
         userTripMapService.saveMap(id, tripId);
+    }
+
+    @Transactional
+    public void updateTripInfo(UUID tripId, UpdateTripRequest updateTripRequest){
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
+        boolean tripStatus = checkTripStatus(updateTripRequest.getStartDate(), updateTripRequest.getEndDate());
+        trip.updateTripInfo(updateTripRequest.getTripName(), updateTripRequest.getStartDate(), updateTripRequest.getEndDate(), tripStatus);
+    }
+
+    @Transactional
+    public void exitTrip(long id, UUID tripId) {
+        UserTripMap userTripMap = userTripMapRepository.findUserTripMapByUserAndTrip(id, tripId)
+                .orElseThrow(() -> new TripNotFoundException(tripId+", "+id+" 값에 해당하는 여행이 없습니다."));
+        userTripMapRepository.delete(userTripMap);
     }
 }

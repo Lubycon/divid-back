@@ -34,26 +34,27 @@ public class Trip {
     @Column(name = "owner_id", nullable = false)
     private Long ownerId;
 
-    @Column(name = "url")
-    private String url;
-
-    @Column(name = "end_yn")
-    private boolean isEnded;
+    @Column(name = "end")
+    private boolean end;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserTripMap> userTripMaps = new ArrayList<>();
 
     @Builder
-    public Trip(String tripName, Long ownerId, LocalDate startDate, LocalDate endDate, String inviteCode, boolean isEnded){
+    public Trip(String tripName, Long ownerId, LocalDate startDate, LocalDate endDate, String inviteCode, boolean end){
         this.tripName = tripName;
         this.ownerId = ownerId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.inviteCode = inviteCode;
-        this.isEnded = isEnded;
+        this.end = end;
     }
-    public void updateUrl(String url){
-        this.url = url;
+
+    public void updateTripInfo(String tripName, LocalDate startDate, LocalDate endDate, boolean end){
+        this.tripName = tripName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.end = end;
     }
 
 }

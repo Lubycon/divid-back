@@ -13,7 +13,7 @@ public interface TripRepository extends JpaRepository<Trip, UUID> {
     @Query("SELECT T.tripId FROM Trip T WHERE T.tripName = :tripName AND T.ownerId = :ownerId")
     UUID findIdByTripName(@Param("tripName") String tripName, @Param("ownerId") Long ownerId);
 
-    @Query("SELECT new com.lubycon.ourney.domains.trip.dto.TripListResponse(T.tripId, T.tripName, T.startDate, T.endDate, T.isEnded)" +
+    @Query("SELECT new com.lubycon.ourney.domains.trip.dto.TripListResponse(T.tripId, T.tripName, T.startDate, T.endDate, T.end)" +
             "FROM Trip T INNER JOIN UserTripMap M " +
             "ON T.tripId = M.trip.tripId " +
             "WHERE M.user.id = :userId")

@@ -15,7 +15,7 @@ public interface UserTripMapRepository extends JpaRepository<UserTripMap, Long> 
             "FROM UserTripMap m " +
             "WHERE m.user.id = :userId " +
             "AND m.trip.tripId = :tripId")
-    Optional<UserTripMap> findUserTripMapByTripAndUser (@Param("userId") Long userId, @Param("tripId") UUID tripId);
+    Optional<UserTripMap> findUserTripMapByUserAndTrip(@Param("userId") Long userId, @Param("tripId") UUID tripId);
 
     @Query("SELECT new com.lubycon.ourney.domains.user.dto.UserInfoResponse(M.user.nickName, M.user.profileImg)" +
             "FROM UserTripMap M " +
