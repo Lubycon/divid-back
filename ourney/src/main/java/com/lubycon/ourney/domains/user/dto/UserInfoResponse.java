@@ -15,19 +15,19 @@ public class UserInfoResponse {
     @Nullable
     private String nickName;
     @Nullable
-    private String profile;
+    private String profileImg;
     @NotNull
     private boolean me;
 
     @Builder
-    public UserInfoResponse(long userId, String nickName, String profile){
+    public UserInfoResponse(long userId, String nickName, String profileImg){
         this.userId = userId;
         this.nickName = nickName;
-        this.profile = profile;
+        this.profileImg = profileImg;
     }
 
-    public void updateMe(boolean me){
-        this.me = me;
+    public void updateMe(){
+        this.me = true;
     }
 
 

@@ -12,12 +12,12 @@ public class UserInfoRequest {
     @Nullable
     private String nickName;
     @Nullable
-    private String profile;
+    private String profileImg;
 
     @Builder
-    public UserInfoRequest(String nickName, String profile){
+    public UserInfoRequest(String nickName, String profileImg){
         this.nickName = nickName;
-        this.profile = profile;
+        this.profileImg = profileImg;
     }
 
 }

@@ -94,7 +94,7 @@ public class UserService {
     public void updateUser(Long userId, UserInfoRequest request){
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
-        user.updateMyInfo(request.getNickName(),request.getProfile());
+        user.updateMyInfo(request.getNickName(),request.getProfileImg());
     }
 
     public UserInfoRequest getUser(Long userId) {

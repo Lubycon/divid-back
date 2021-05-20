@@ -1,6 +1,5 @@
 package com.lubycon.ourney.domains.trip.service;
 
-import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.domains.trip.dto.CreateTripRequest;
 import com.lubycon.ourney.domains.trip.dto.TripListResponse;
 import com.lubycon.ourney.domains.trip.dto.TripResponse;
@@ -29,9 +28,9 @@ public class TripService {
     public List<TripListResponse> getTripList(long id) {
         List<TripListResponse> tripListResponseList = tripRepository.findAllByUserId(id);
         for(TripListResponse tripListResponse : tripListResponseList){
-            ArrayList<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripListResponse.getTripId());
+            List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripListResponse.getTripId());
             tripListResponse.updateTripInfo(tripRepository.findByTripId(tripListResponse.getTripId()), userInfoResponseList);
-            checkIsMe(id, userInfoResponseList);
+            swapMeFirst(id, userInfoResponseList);
         }
         return tripListResponseList;
     }
@@ -39,21 +38,22 @@ public class TripService {
     public TripResponse getTrip(long id, UUID tripId){
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
-        ArrayList<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
-        checkIsMe(id, userInfoResponseList);
+        List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
+        swapMeFirst(id, userInfoResponseList);
         return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), userInfoResponseList);
     }
 
-    private void checkIsMe(long id, ArrayList<UserInfoResponse> userInfoResponseList) {
+    private void swapMeFirst(long id, List<UserInfoResponse> userInfoResponseList) {
         int index = 0;
-        for(int i = 0; i<userInfoResponseList.size(); i++){
-            if(userInfoResponseList.get(i).getUserId() == id) {
-                userInfoResponseList.get(i).updateMe(true);
-                index = i;
+        for (UserInfoResponse userInfoResponse : userInfoResponseList) {
+            if (userInfoResponse.getUserId() == id) {
+                userInfoResponse.updateMe();
+                index = userInfoResponseList.indexOf(userInfoResponse);
+                if(userInfoResponseList.size()>1) {
+                    Collections.swap(userInfoResponseList, 0, index);
+                }
+                break;
             }
-        }
-        if(userInfoResponseList.size()>1) {
-            Collections.swap(userInfoResponseList, 0, index);
         }
     }
 
@@ -115,9 +115,7 @@ public class TripService {
     @Transactional
     public void deleteTrip(UUID tripId) {
         List<UserTripMap> userTripMapList = userTripMapRepository.findAllEntityByTripId(tripId);
-        for(UserTripMap userTripMap : userTripMapList){
-            userTripMapRepository.delete(userTripMap);
-        }
+        userTripMapRepository.deleteAll(userTripMapList);
         tripRepository.deleteById(tripId);
     }
 }
