@@ -5,8 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public interface TripRepository extends JpaRepository<Trip, UUID> {
@@ -17,7 +16,7 @@ public interface TripRepository extends JpaRepository<Trip, UUID> {
             "FROM Trip T INNER JOIN UserTripMap M " +
             "ON T.tripId = M.trip.tripId " +
             "WHERE M.user.id = :userId")
-    List<TripListResponse> findAllByUserId(@Param("userId") Long userId);
+    ArrayList<TripListResponse> findAllByUserId(@Param("userId") Long userId);
 
     @Query("SELECT COUNT(M.user.id) FROM UserTripMap M WHERE M.trip.tripId = :tripId")
     Long findByTripId(@Param("tripId") UUID tripId);

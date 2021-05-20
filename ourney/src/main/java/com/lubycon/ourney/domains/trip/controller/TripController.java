@@ -35,7 +35,7 @@ public class TripController {
     @GetMapping("")
     public ResponseEntity getTripDetail(@LoginId long id, @RequestParam("tripId") UUID tripId, @RequestHeader(Constants.INVITE_CODE) String inviteCode) throws TripAccessDeniedException {
         tripService.checkTripAuth(id, tripId, inviteCode);
-        return ResponseEntity.ok(tripService.getTrip(tripId));
+        return ResponseEntity.ok(tripService.getTrip(id, tripId));
     }
 
     @ApiOperation("여행 생성")

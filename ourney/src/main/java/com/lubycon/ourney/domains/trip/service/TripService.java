@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -31,18 +29,32 @@ public class TripService {
     public List<TripListResponse> getTripList(long id) {
         List<TripListResponse> tripListResponseList = tripRepository.findAllByUserId(id);
         for(TripListResponse tripListResponse : tripListResponseList){
-            List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripListResponse.getTripId());
+            ArrayList<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripListResponse.getTripId());
             tripListResponse.updateTripInfo(tripRepository.findByTripId(tripListResponse.getTripId()), userInfoResponseList);
+            checkIsMe(id, userInfoResponseList);
         }
-
         return tripListResponseList;
     }
 
-    public TripResponse getTrip(UUID tripId){
+    public TripResponse getTrip(long id, UUID tripId){
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
-        List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
+        ArrayList<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
+        checkIsMe(id, userInfoResponseList);
         return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), userInfoResponseList);
+    }
+
+    private void checkIsMe(long id, ArrayList<UserInfoResponse> userInfoResponseList) {
+        int index = 0;
+        for(int i = 0; i<userInfoResponseList.size(); i++){
+            if(userInfoResponseList.get(i).getUserId() == id) {
+                userInfoResponseList.get(i).updateMe(true);
+                index = i;
+            }
+        }
+        if(userInfoResponseList.size()>1) {
+            Collections.swap(userInfoResponseList, 0, index);
+        }
     }
 
     public UUID saveTrip(long userId, CreateTripRequest createTripRequest) {
