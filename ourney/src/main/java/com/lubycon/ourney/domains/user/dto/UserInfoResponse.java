@@ -5,18 +5,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @NoArgsConstructor
 public class UserInfoResponse {
+    @NotNull
+    private long userId;
     @Nullable
     private String nickName;
     @Nullable
-    private String profile;
+    private String profileImg;
+    @NotNull
+    private boolean me;
 
     @Builder
-    public UserInfoResponse(String nickName, String profile){
+    public UserInfoResponse(long userId, String nickName, String profileImg){
+        this.userId = userId;
         this.nickName = nickName;
-        this.profile = profile;
+        this.profileImg = profileImg;
     }
+
+    public void updateMe(){
+        this.me = true;
+    }
+
 
 }
