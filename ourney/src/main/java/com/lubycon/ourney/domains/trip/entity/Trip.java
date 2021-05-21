@@ -1,5 +1,6 @@
 package com.lubycon.ourney.domains.trip.entity;
 
+import com.lubycon.ourney.domains.expense.entity.Expense;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +40,9 @@ public class Trip {
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserTripMap> userTripMaps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Expense> expenses = new ArrayList<>();
 
     @Builder
     public Trip(String tripName, Long ownerId, LocalDate startDate, LocalDate endDate, String inviteCode, boolean end){
