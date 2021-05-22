@@ -14,10 +14,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    private long id;
 
     @Column(name = "kakao_id", nullable = false)
-    private Long kakaoId;
+    private long kakaoId;
 
     @Column(name = "email", length = 45, nullable = false)
     private String email;
@@ -35,7 +35,7 @@ public class User {
     private List<UserTripMap> userTripMaps = new ArrayList<>();
 
     @Builder
-    public User(Long kakaoId, String nickName, String email,String profileImg){
+    public User(long kakaoId, String nickName, String email,String profileImg){
         this.kakaoId = kakaoId;
         this.nickName = nickName;
         this.email = email;

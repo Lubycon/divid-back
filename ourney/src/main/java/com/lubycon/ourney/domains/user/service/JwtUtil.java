@@ -16,7 +16,7 @@ class JwtUtil {
         SECRET = secret;
     }
 
-    public String createToken(Long id, Long expiredTime){
+    public String createToken(long id, Long expiredTime){
         Date ext = new Date(System.currentTimeMillis()); // 토큰 만료 시간
         ext.setTime(ext.getTime() + expiredTime);
 

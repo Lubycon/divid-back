@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +43,7 @@ public class TripController {
     @PostMapping("")
     public ResponseEntity<SimpleSuccessResponse> createTrip(
             @LoginId long id,
-            @RequestBody CreateTripRequest createTripRequest
+            @Valid @RequestBody CreateTripRequest createTripRequest
     ) {
         UUID tripId = tripService.saveTrip(id, createTripRequest);
         userTripMapService.saveMap(id, tripId);
@@ -53,7 +54,7 @@ public class TripController {
     @PutMapping("")
     public ResponseEntity<SimpleSuccessResponse> updateTrip(
             @RequestParam("tripId") UUID tripId,
-            @RequestBody UpdateTripRequest updateTripRequest
+            @Valid @RequestBody UpdateTripRequest updateTripRequest
             ){
         tripService.updateTripInfo(tripId, updateTripRequest);
         return ResponseEntity.ok(new SimpleSuccessResponse(ResponseMessages.SUCCESS_UPDATE_TRIP));

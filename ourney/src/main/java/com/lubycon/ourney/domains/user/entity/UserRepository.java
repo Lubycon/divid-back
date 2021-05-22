@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Long findIdByKakaoId(@Param("kakaoId") Long kakaoId);
 
     @Query("SELECT U.refreshToken FROM User U WHERE U.id = :id")
-    String findRefreshTokenById(@Param("id") Long id);
+    String findRefreshTokenById(@Param("id") long id);
+
 
 }

@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class JwtPayload {
     @NotNull
-    private Long id;
+    private long id;
     @NotNull
     private String issuer;
 }

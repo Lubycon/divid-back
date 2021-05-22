@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class LoginRequest {
     @NotNull
-    private Long kakaoId;
+    private long kakaoId;
     @Nullable
     private String email;
     @NotNull
@@ -20,7 +20,7 @@ public class LoginRequest {
     private boolean isMember;
 
     @Builder
-    public LoginRequest(Long kakaoId, String email, String nickName, String profile, boolean isMember){
+    public LoginRequest(long kakaoId, String email, String nickName, String profile, boolean isMember){
         this.kakaoId = kakaoId;
         this.email = email;
         this.nickName = nickName;

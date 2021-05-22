@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -27,7 +29,7 @@ public class UserController {
     @PutMapping("/mypage")
     public ResponseEntity<SimpleSuccessResponse> updateUser(
             @LoginId long id,
-            @RequestBody UserInfoRequest userInfoRequest
+            @Valid @RequestBody UserInfoRequest userInfoRequest
     ) {
         userService.updateUser(id, userInfoRequest);
         return ResponseEntity.ok().body(new SimpleSuccessResponse(ResponseMessages.SUCCESS_UPDATE_USER));
