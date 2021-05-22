@@ -15,4 +15,5 @@ public class ResponseMessages {
     public static String SUCCESS_DELETE_TRIP = "여행 삭제 완료 되었습니다.";
 
     public static String SUCCESS_CREATE_EXPENSE = "여행 내역 생성 완료 되었습니다.";
+    public static String SUCCESS_DETAIL_EXPENSE = "여행 내역 삭제 완료 되었습니다.";
 }

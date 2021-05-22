@@ -1,6 +1,7 @@
 package com.lubycon.ourney.domains.trip.entity;
 
 import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
+import com.lubycon.ourney.domains.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +27,6 @@ public interface UserTripMapRepository extends JpaRepository<UserTripMap, Long> 
             "FROM UserTripMap m " +
             "WHERE m.trip.tripId = :tripId ")
     List<UserTripMap> findAllEntityByTripId(@Param("tripId") UUID tripId);
+
 }
+
