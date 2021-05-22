@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class TokenResponse {
     @NotNull
-    private Long userId;
+    private long userId;
     @NotNull
     private String accessToken;
     @NotNull

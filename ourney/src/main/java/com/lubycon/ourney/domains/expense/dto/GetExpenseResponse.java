@@ -8,26 +8,26 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-public class GetExpenseOneResponse {
+public class GetExpenseResponse {
     @NotNull
-    private Long expenseId;
+    private long expenseId;
     @NotNull
     private LocalDate payDate;
     @NotNull
-    private Long totalPrice;
+    private long totalPrice;
     @NotNull
     private String title;
     @NotNull
-    private Long payerId;
+    private long payerId;
     @NotNull
     private String profileImg;
     @NotNull
     private String nickName;
     @NotNull
-    private List<GetExpenseOneDetailResponse> getExpenseOneDetailResponses;
+    private List<GetExpenseDetailResponse> getExpenseDetails;
 
     @Builder
-    public GetExpenseOneResponse(Long expenseId, LocalDate payDate, Long totalPrice, String title, Long payerId, String profileImg, String nickName, List<GetExpenseOneDetailResponse> getExpenseOneDetailResponses){
+    public GetExpenseResponse(long expenseId, LocalDate payDate, long totalPrice, String title, long payerId, String profileImg, String nickName, List<GetExpenseDetailResponse> getExpenseDetails){
         this.expenseId = expenseId;
         this.payDate = payDate;
         this.totalPrice = totalPrice;
@@ -35,6 +35,6 @@ public class GetExpenseOneResponse {
         this.payerId = payerId;
         this.profileImg = profileImg;
         this.nickName = nickName;
-        this.getExpenseOneDetailResponses = getExpenseOneDetailResponses;
+        this.getExpenseDetails = getExpenseDetails;
     }
 }

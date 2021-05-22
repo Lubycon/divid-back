@@ -15,23 +15,23 @@ import java.time.LocalDate;
 public class ExpenseDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long expenseDetailId;
+    private long expenseDetailId;
 
     @Column(name = "expense_id", nullable = false)
-    private Long expenseId;
+    private long expenseId;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private long userId;
 
     @Column(name = "price", nullable = false)
-    private Long price;
+    private long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expense_id", nullable = false, insertable=false, updatable=false)
     private Expense expense;
 
     @Builder
-    public ExpenseDetail(Long expenseId, Long userId, Long price){
+    public ExpenseDetail(long expenseId, long userId, long price){
         this.expenseId = expenseId;
         this.userId = userId;
         this.price = price;

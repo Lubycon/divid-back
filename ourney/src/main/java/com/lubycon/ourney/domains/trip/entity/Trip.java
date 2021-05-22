@@ -33,7 +33,7 @@ public class Trip {
     private String inviteCode;
 
     @Column(name = "owner_id", nullable = false)
-    private Long ownerId;
+    private long ownerId;
 
     @Column(name = "end")
     private boolean end;
@@ -45,7 +45,7 @@ public class Trip {
     private List<Expense> expenses = new ArrayList<>();
 
     @Builder
-    public Trip(String tripName, Long ownerId, LocalDate startDate, LocalDate endDate, String inviteCode, boolean end){
+    public Trip(String tripName, long ownerId, LocalDate startDate, LocalDate endDate, String inviteCode, boolean end){
         this.tripName = tripName;
         this.ownerId = ownerId;
         this.startDate = startDate;

@@ -5,21 +5,18 @@ import com.lubycon.ourney.domains.expense.entity.Expense;
 import com.lubycon.ourney.domains.expense.entity.ExpenseDetail;
 import com.lubycon.ourney.domains.expense.entity.ExpenseDetailRepository;
 import com.lubycon.ourney.domains.expense.entity.ExpenseRepository;
-import com.lubycon.ourney.domains.trip.entity.UserTripMapRepository;
-import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
+import com.lubycon.ourney.domains.expense.exception.ExpenseNotFoundException;
 import com.lubycon.ourney.domains.user.entity.User;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
+import com.lubycon.ourney.domains.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ExpenseService {
@@ -27,25 +24,26 @@ public class ExpenseService {
     private final ExpenseDetailRepository expenseDetailRepository;
     private final UserRepository userRepository;
 
-    public GetExpenseOneResponse getExpenseOne(long id, UUID tripId, Long expenseId){
+    public GetExpenseResponse getExpense(long id, UUID tripId, long expenseId){
         Expense expense = expenseRepository.findExpenseByTripIdAndExpenseId(tripId, expenseId);
-        Optional<User> user = userRepository.findById(id);
-        List<GetExpenseOneDetailResponse> expenseOneDetailResponses = expenseDetailRepository.findAllByExpenseId(expenseId);
-        for (GetExpenseOneDetailResponse getExpenseOneDetailResponse : expenseOneDetailResponses) {
-            if (getExpenseOneDetailResponse.getUserId() == id) {
-                getExpenseOneDetailResponse.updateMe();
+        User user = userRepository.findById(id)
+                .orElseThrow(()-> new UserNotFoundException(id+"에 해당하는 유저가 없습니다."));
+        List<GetExpenseDetailResponse> expenseOneDetailResponses = expenseDetailRepository.findAllByExpenseId(expenseId);
+        for (GetExpenseDetailResponse getExpenseDetailResponse : expenseOneDetailResponses) {
+            if (getExpenseDetailResponse.getUserId() == id) {
+                getExpenseDetailResponse.updateMe();
                 break;
             }
         }
-        return GetExpenseOneResponse.builder()
+        return GetExpenseResponse.builder()
                 .expenseId(expenseId)
                 .payDate(expense.getPayDate())
                 .totalPrice(expense.getTotalPrice())
                 .title(expense.getTitle())
                 .payerId(expense.getPayerId())
-                .profileImg(user.get().getProfileImg())
-                .nickName(user.get().getNickName())
-                .getExpenseOneDetailResponses(expenseOneDetailResponses)
+                .profileImg(user.getProfileImg())
+                .nickName(user.getNickName())
+                .getExpenseDetails(expenseOneDetailResponses)
                 .build();
     }
 
@@ -59,7 +57,7 @@ public class ExpenseService {
                 .build();
         expenseRepository.save(expense);
         Long expenseId = expenseRepository.findIdByTitleAndPayDate(createExpenseRequest.getTitle(), createExpenseRequest.getPayDate());
-        List<CreateExpenseDetailRequest> createExpenseDetailRequests = createExpenseRequest.getCreateExpenseDetailList();
+        List<CreateExpenseDetailRequest> createExpenseDetailRequests = createExpenseRequest.getExpenseDetails();
         for(CreateExpenseDetailRequest createExpenseDetailRequest : createExpenseDetailRequests) {
             ExpenseDetail expenseDetail = ExpenseDetail.builder()
                     .expenseId(expenseId)
@@ -74,11 +72,12 @@ public class ExpenseService {
     }
 
     @Transactional
-    public void deleteExpense(UUID tripId, Long expenseId) {
+    public void deleteExpense(UUID tripId, long expenseId) {
         Expense expense = expenseRepository.findExpenseByTripIdAndExpenseId(tripId, expenseId);
         List<ExpenseDetail> expenseDetails = expenseDetailRepository.findAllEntityByExpenseId(expenseId);
         expenseRepository.delete(expense);
         expenseDetailRepository.deleteAll(expenseDetails);
     }
+
 
 }

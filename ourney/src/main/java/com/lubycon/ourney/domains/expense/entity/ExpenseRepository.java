@@ -2,15 +2,12 @@ package com.lubycon.ourney.domains.expense.entity;
 
 import com.lubycon.ourney.domains.expense.dto.ExpenseListResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpenseListInfoResponse;
-import com.lubycon.ourney.domains.expense.dto.GetExpenseOneDetailResponse;
-import com.lubycon.ourney.domains.expense.dto.GetExpenseOneResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
@@ -24,6 +21,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             "FROM Expense E INNER JOIN User U ON E.payerId = U.id WHERE E.tripId = :tripId")
     List<ExpenseListResponse> findAllBytripId(@Param("tripId") UUID tripId);
 
-    Expense findExpenseByTripIdAndExpenseId(@Param("tripId") UUID tripId, @Param("expenseId") Long expenseId);
+    Expense findExpenseByTripIdAndExpenseId(@Param("tripId") UUID tripId, @Param("expenseId") long expenseId);
 
 }

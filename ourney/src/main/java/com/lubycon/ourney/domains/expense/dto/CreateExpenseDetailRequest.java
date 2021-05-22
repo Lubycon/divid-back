@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class CreateExpenseDetailRequest {
     @NotNull
-    private Long userId;
+    private long userId;
     @NotNull
     private String nickName;
     @NotNull
@@ -14,7 +14,7 @@ public class CreateExpenseDetailRequest {
     @NotNull
     private boolean me;
     @NotNull
-    private Long price;
+    private long price;
 
     public void updateMe(){
         this.me = true;

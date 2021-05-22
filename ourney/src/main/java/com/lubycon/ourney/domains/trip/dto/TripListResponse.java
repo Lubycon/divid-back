@@ -22,7 +22,7 @@ public class TripListResponse {
     @NotNull
     private boolean end;
     @NotNull
-    private Long memberCnt;
+    private long memberCnt;
     @NotNull
     private List<UserInfoResponse> userInfoResponseList;
 

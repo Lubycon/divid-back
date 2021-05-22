@@ -26,7 +26,7 @@ public class Expense {
     private UUID tripId;
 
     @Column(name = "payer_id", nullable = false)
-    private Long payerId;
+    private long payerId;
 
     @Column(name = "pay_date", nullable = false)
     private LocalDate payDate;
@@ -35,7 +35,7 @@ public class Expense {
     private String title;
 
     @Column(name = "total_price", nullable = false)
-    private Long totalPrice;
+    private long totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id", nullable = false, insertable=false, updatable=false)
@@ -45,7 +45,7 @@ public class Expense {
     private List<ExpenseDetail> expenseDetails = new ArrayList<>();
 
     @Builder
-    public Expense(UUID tripId, Long payerId, LocalDate payDate, String title, Long totalPrice){
+    public Expense(UUID tripId, long payerId, LocalDate payDate, String title, long totalPrice){
         this.tripId = tripId;
         this.payerId = payerId;
         this.payDate = payDate;

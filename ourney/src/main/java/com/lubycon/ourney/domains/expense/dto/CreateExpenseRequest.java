@@ -14,11 +14,11 @@ public class CreateExpenseRequest {
     @NotNull
     private LocalDate payDate;
     @NotNull
-    private Long totalPrice;
+    private long totalPrice;
     @NotNull
     private String title;
     @NotNull
-    private Long payerId;
+    private long payerId;
     @NotNull
-    private List<CreateExpenseDetailRequest> createExpenseDetailList;
+    private List<CreateExpenseDetailRequest> expenseDetails;
 }

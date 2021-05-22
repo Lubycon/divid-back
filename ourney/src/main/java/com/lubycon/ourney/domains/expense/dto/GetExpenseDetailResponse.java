@@ -5,9 +5,9 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public class GetExpenseOneDetailResponse{
+public class GetExpenseDetailResponse {
     @NotNull
-    private Long userId;
+    private long userId;
     @NotNull
     private String nickName;
     @NotNull
@@ -15,10 +15,10 @@ public class GetExpenseOneDetailResponse{
     @NotNull
     private boolean me;
     @NotNull
-    private Long price;
+    private long price;
 
     @Builder
-    public GetExpenseOneDetailResponse(Long userId, String nickName, String profileImg, Long price){
+    public GetExpenseDetailResponse(long userId, String nickName, String profileImg, long price){
         this.userId = userId;
         this.nickName = nickName;
         this.profileImg = profileImg;
