@@ -30,7 +30,7 @@ public class TripService {
         for(TripListResponse tripListResponse : tripListResponseList){
             List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripListResponse.getTripId());
             tripListResponse.updateTripInfo(tripRepository.findByTripId(tripListResponse.getTripId()), userInfoResponseList);
-            swapMeFirst(id, userInfoResponseList);
+            modifyUserInfoResponseList(id, userInfoResponseList);
         }
         return tripListResponseList;
     }
@@ -39,11 +39,11 @@ public class TripService {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
         List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
-        swapMeFirst(id, userInfoResponseList);
+        modifyUserInfoResponseList(id, userInfoResponseList);
         return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), userInfoResponseList);
     }
 
-    private void swapMeFirst(long id, List<UserInfoResponse> userInfoResponseList) {
+    private void modifyUserInfoResponseList(long id, List<UserInfoResponse> userInfoResponseList) {
         int index = 0;
         for (UserInfoResponse userInfoResponse : userInfoResponseList) {
             if (userInfoResponse.getUserId() == id) {
