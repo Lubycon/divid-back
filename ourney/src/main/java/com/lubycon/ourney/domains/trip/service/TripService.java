@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -27,29 +30,29 @@ public class TripService {
 
     public List<TripListResponse> getTripList(long id) {
         List<TripListResponse> tripListResponseList = tripRepository.findAllByUserId(id);
-        for(TripListResponse tripListResponse : tripListResponseList){
+        for (TripListResponse tripListResponse : tripListResponseList) {
             List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripListResponse.getTripId());
             tripListResponse.updateTripInfo(tripRepository.findByTripId(tripListResponse.getTripId()), userInfoResponseList);
-            swapMeFirst(id, userInfoResponseList);
+            updateMemberList(id, userInfoResponseList);
         }
         return tripListResponseList;
     }
 
-    public TripResponse getTrip(long id, UUID tripId){
+    public TripResponse getTrip(long id, UUID tripId) {
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
+                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
         List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
-        swapMeFirst(id, userInfoResponseList);
+        updateMemberList(id, userInfoResponseList);
         return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), userInfoResponseList);
     }
 
-    private void swapMeFirst(long id, List<UserInfoResponse> userInfoResponseList) {
+    private void updateMemberList(long id, List<UserInfoResponse> userInfoResponseList) {
         int index = 0;
         for (UserInfoResponse userInfoResponse : userInfoResponseList) {
             if (userInfoResponse.getUserId() == id) {
                 userInfoResponse.updateMe();
                 index = userInfoResponseList.indexOf(userInfoResponse);
-                if(userInfoResponseList.size()>1) {
+                if (userInfoResponseList.size() > 1) {
                     Collections.swap(userInfoResponseList, 0, index);
                 }
                 break;
@@ -70,11 +73,11 @@ public class TripService {
         return tripRepository.findIdByTripName(createTripRequest.getTripName(), userId);
     }
 
-    public boolean checkTripStatus(LocalDate startDate, LocalDate endDate){
+    public boolean checkTripStatus(LocalDate startDate, LocalDate endDate) {
         LocalDate localDate = LocalDate.now();
-        if(localDate.isAfter(startDate) && localDate.isBefore(endDate)) {
+        if (localDate.isAfter(startDate) && localDate.isBefore(endDate)) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
@@ -82,12 +85,11 @@ public class TripService {
     @Transactional
     public void checkTripAuth(long id, UUID tripId, String inviteCode) throws TripAccessDeniedException {
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(()-> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
+                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
         Optional<UserTripMap> userTripMap = userTripMapRepository.findUserTripMapByUserAndTrip(id, trip.getTripId());
-        if(trip.getInviteCode().equals(inviteCode) && userTripMap.isEmpty()){
+        if (trip.getInviteCode().equals(inviteCode) && userTripMap.isEmpty()) {
             enrollTrip(id, tripId);
-        }
-        else if(!trip.getInviteCode().equals(inviteCode)){
+        } else if (!trip.getInviteCode().equals(inviteCode)) {
             throw new TripAccessDeniedException(id);
         }
     }
@@ -98,9 +100,9 @@ public class TripService {
     }
 
     @Transactional
-    public void updateTripInfo(UUID tripId, UpdateTripRequest updateTripRequest){
+    public void updateTripInfo(UUID tripId, UpdateTripRequest updateTripRequest) {
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException(tripId+"값에 해당하는 여행이 없습니다."));
+                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
         boolean tripStatus = checkTripStatus(updateTripRequest.getStartDate(), updateTripRequest.getEndDate());
         trip.updateTripInfo(updateTripRequest.getTripName(), updateTripRequest.getStartDate(), updateTripRequest.getEndDate(), tripStatus);
     }
@@ -108,7 +110,7 @@ public class TripService {
     @Transactional
     public void exitTrip(long id, UUID tripId) {
         UserTripMap userTripMap = userTripMapRepository.findUserTripMapByUserAndTrip(id, tripId)
-                .orElseThrow(() -> new TripNotFoundException(tripId+", "+id+" 값에 해당하는 여행이 없습니다."));
+                .orElseThrow(() -> new TripNotFoundException(tripId + ", " + id + " 값에 해당하는 여행이 없습니다."));
         userTripMapRepository.delete(userTripMap);
     }
 
@@ -117,5 +119,11 @@ public class TripService {
         List<UserTripMap> userTripMapList = userTripMapRepository.findAllEntityByTripId(tripId);
         userTripMapRepository.deleteAll(userTripMapList);
         tripRepository.deleteById(tripId);
+    }
+
+    public List<UserInfoResponse> getMember(long id, UUID tripId) {
+        List<UserInfoResponse> responses = userTripMapRepository.findAllByTripId(tripId);
+        updateMemberList(id, responses);
+        return responses;
     }
 }
