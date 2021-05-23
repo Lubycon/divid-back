@@ -24,10 +24,12 @@ public class GetExpenseResponse {
     @NotNull
     private String nickName;
     @NotNull
+    private boolean individual;
+    @NotNull
     private List<GetExpenseDetailResponse> getExpenseDetails;
 
     @Builder
-    public GetExpenseResponse(long expenseId, LocalDate payDate, long totalPrice, String title, long payerId, String profileImg, String nickName, List<GetExpenseDetailResponse> getExpenseDetails){
+    public GetExpenseResponse(long expenseId, LocalDate payDate, long totalPrice, String title, long payerId, String profileImg, String nickName, boolean individual, List<GetExpenseDetailResponse> getExpenseDetails){
         this.expenseId = expenseId;
         this.payDate = payDate;
         this.totalPrice = totalPrice;
@@ -35,6 +37,7 @@ public class GetExpenseResponse {
         this.payerId = payerId;
         this.profileImg = profileImg;
         this.nickName = nickName;
+        this.individual = individual;
         this.getExpenseDetails = getExpenseDetails;
     }
 }

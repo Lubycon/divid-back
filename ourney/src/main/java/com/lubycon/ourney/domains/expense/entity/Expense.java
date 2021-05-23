@@ -37,6 +37,9 @@ public class Expense {
     @Column(name = "total_price", nullable = false)
     private long totalPrice;
 
+    @Column(name = "individual", nullable = false)
+    private boolean individual;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id", nullable = false, insertable=false, updatable=false)
     private Trip trip;
@@ -44,13 +47,21 @@ public class Expense {
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpenseDetail> expenseDetails = new ArrayList<>();
 
+    public void updateExpense(long payerId, LocalDate payDate, String title, long totalPrice){
+        this.payerId = payerId;
+        this.payDate = payDate;
+        this.title = title;
+        this.totalPrice = totalPrice;
+    }
+
     @Builder
-    public Expense(UUID tripId, long payerId, LocalDate payDate, String title, long totalPrice){
+    public Expense(UUID tripId, long payerId, LocalDate payDate, String title, long totalPrice, boolean individual){
         this.tripId = tripId;
         this.payerId = payerId;
         this.payDate = payDate;
         this.title = title;
         this.totalPrice = totalPrice;
+        this.individual = individual;
     }
 
 }
