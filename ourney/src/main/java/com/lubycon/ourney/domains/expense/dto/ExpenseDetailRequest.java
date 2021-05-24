@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public class CreateExpenseDetailRequest {
+public class ExpenseDetailRequest {
     @NotNull
     private long userId;
     @NotNull

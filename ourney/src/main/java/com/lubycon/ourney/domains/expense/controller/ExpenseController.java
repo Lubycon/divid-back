@@ -3,7 +3,7 @@ package com.lubycon.ourney.domains.expense.controller;
 import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.config.interceptor.LoginId;
 import com.lubycon.ourney.common.error.SimpleSuccessResponse;
-import com.lubycon.ourney.domains.expense.dto.CreateExpenseRequest;
+import com.lubycon.ourney.domains.expense.dto.ExpenseRequest;
 import com.lubycon.ourney.domains.expense.service.ExpenseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -34,15 +34,27 @@ public class ExpenseController {
     @PostMapping("")
     public ResponseEntity<SimpleSuccessResponse> createExpense(
             @LoginId long id,
-            @Valid @RequestBody CreateExpenseRequest createExpenseRequest
+            @Valid @RequestBody ExpenseRequest expenseRequest
     ) {
-        expenseService.saveExpense(id, createExpenseRequest);
+        expenseService.saveExpense(id, expenseRequest);
         return ResponseEntity.ok(new SimpleSuccessResponse(ResponseMessages.SUCCESS_CREATE_EXPENSE));
+    }
+
+    @ApiOperation("지출 내역 수정")
+    @PutMapping("")
+    public ResponseEntity updateExpense(
+            @LoginId long id,
+            @RequestParam UUID tripId,
+            @RequestParam Long expenseId,
+            @RequestBody ExpenseRequest expenseRequest
+            ){
+        expenseService.updateExpense(id, tripId, expenseId, expenseRequest);
+        return ResponseEntity.ok(new SimpleSuccessResponse(ResponseMessages.SUCCESS_UPDATE_EXPENSE));
     }
 
     @ApiOperation("지출 내역 삭제")
     @DeleteMapping("")
-    public ResponseEntity deleteExpenseOne(
+    public ResponseEntity deleteExpense(
             @RequestParam UUID tripId,
             @RequestParam Long expenseId
     ){

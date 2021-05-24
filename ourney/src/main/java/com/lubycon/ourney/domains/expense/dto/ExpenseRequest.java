@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
-public class CreateExpenseRequest {
+public class ExpenseRequest {
     @NotNull
     private UUID tripId;
     @NotNull
@@ -20,5 +20,7 @@ public class CreateExpenseRequest {
     @NotNull
     private long payerId;
     @NotNull
-    private List<CreateExpenseDetailRequest> expenseDetails;
+    private boolean individual;
+    @NotNull
+    private List<ExpenseDetailRequest> expenseDetails;
 }
