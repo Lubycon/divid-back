@@ -124,7 +124,7 @@ public class TripService {
 
     public List<UserInfoResponse> getMember(long id, UUID tripId) {
         List<UserInfoResponse> responses = userTripMapRepository.findAllByTripId(tripId);
-        updateMemberList(id, responses);
+        modifyUserInfoResponseList(id, responses);
         return responses;
     }
 }
