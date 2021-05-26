@@ -6,7 +6,6 @@ import com.lubycon.ourney.common.error.SimpleSuccessResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpenseListResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpenseRequest;
 import com.lubycon.ourney.domains.expense.service.ExpenseService;
-import com.lubycon.ourney.domains.trip.service.TripService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,6 @@ import java.util.UUID;
 @RestController
 public class ExpenseController {
     private final ExpenseService expenseService;
-    private final TripService tripService;
 
     @ApiOperation("지출 내역 조회")
     @GetMapping("")
