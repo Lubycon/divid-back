@@ -5,18 +5,21 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.common.ResponseMessages;
+import com.lubycon.ourney.domains.trip.entity.UserTripMapRepository;
+import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import com.lubycon.ourney.domains.user.dto.UserInfoRequest;
 import com.lubycon.ourney.domains.user.entity.User;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
-import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -25,6 +28,7 @@ import java.net.URL;
 public class UserService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final UserTripMapRepository userTripMapRepository;
 
     public TokenResponse login(LoginRequest request) {
         Long userId = userRepository.findIdByKakaoId(request.getKakaoId());
@@ -69,10 +73,9 @@ public class UserService {
             nickName = properties.getAsJsonObject().get("nickname").getAsString();
             email = kakao_account.getAsJsonObject().get("email").getAsString();
 
-            if(userRepository.existsByKakaoId(kakaoId)){
-                return new LoginRequest(kakaoId, email, nickName, profile,true);
-            }
-            else{
+            if (userRepository.existsByKakaoId(kakaoId)) {
+                return new LoginRequest(kakaoId, email, nickName, profile, true);
+            } else {
                 return new LoginRequest(kakaoId, email, nickName, profile, false);
             }
         } catch (IOException e) {
@@ -84,29 +87,30 @@ public class UserService {
     public void updateToken(
             long userId,
             @NotNull String refreshToken
-    ){
+    ) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
         user.updateRefreshToken(refreshToken);
     }
 
     @Transactional
-    public void updateUser(Long userId, UserInfoRequest request){
+    public void updateUser(long userId, UserInfoRequest request) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
-        user.updateMyInfo(request.getNickName(),request.getProfileImg());
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
+        user.updateMyInfo(request.getNickName(), request.getProfileImg());
     }
 
-    public UserInfoRequest getUser(Long userId) {
+    public UserInfoRequest getUser(long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
         return new UserInfoRequest(user.getNickName(), user.getProfileImg());
     }
 
     @Transactional
-    public void deleteUser(Long userId) {
+    public void deleteUser(long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
         userRepository.delete(user);
     }
+    
 }

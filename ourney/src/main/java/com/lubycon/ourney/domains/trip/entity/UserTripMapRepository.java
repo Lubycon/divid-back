@@ -1,12 +1,10 @@
 package com.lubycon.ourney.domains.trip.entity;
 
 import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
-import com.lubycon.ourney.domains.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

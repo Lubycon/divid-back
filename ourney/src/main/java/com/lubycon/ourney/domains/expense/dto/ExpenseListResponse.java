@@ -3,30 +3,24 @@ package com.lubycon.ourney.domains.expense.dto;
 import lombok.Builder;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class ExpenseListResponse {
     @NotNull
-    private Long expenseId;
+    private Long tripTotalPrice;
     @NotNull
     private LocalDate payDate;
-    @NotNull
-    private String profileImg;
-    @NotNull
-    private String nickName;
-    @NotNull
-    private Long price;
-    @NotNull
-    private String title;
+    @Nullable
+    private List<ExpenseListElementResponse> detailResponses;
+
     @Builder
-    public ExpenseListResponse(Long expenseId, LocalDate payDate, String profileImg, String nickName, Long price, String title){
-        this.expenseId = expenseId;
+    public ExpenseListResponse(@NotNull Long tripTotalPrice, @NotNull LocalDate payDate, @Nullable List<ExpenseListElementResponse> detailResponses) {
+        this.tripTotalPrice = tripTotalPrice;
         this.payDate = payDate;
-        this.profileImg = profileImg;
-        this.nickName = nickName;
-        this.price = price;
-        this.title = title;
+        this.detailResponses = detailResponses;
     }
 }

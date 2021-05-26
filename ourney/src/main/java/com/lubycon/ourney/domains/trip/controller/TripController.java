@@ -10,6 +10,7 @@ import com.lubycon.ourney.domains.trip.dto.UpdateTripRequest;
 import com.lubycon.ourney.domains.trip.exception.TripAccessDeniedException;
 import com.lubycon.ourney.domains.trip.service.TripService;
 import com.lubycon.ourney.domains.trip.service.UserTripMapService;
+import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class TripController {
     public ResponseEntity<SimpleSuccessResponse> updateTrip(
             @RequestParam("tripId") UUID tripId,
             @Valid @RequestBody UpdateTripRequest updateTripRequest
-            ){
+    ) {
         tripService.updateTripInfo(tripId, updateTripRequest);
         return ResponseEntity.ok(new SimpleSuccessResponse(ResponseMessages.SUCCESS_UPDATE_TRIP));
     }
@@ -77,5 +78,10 @@ public class TripController {
         return ResponseEntity.ok().body(new SimpleSuccessResponse(ResponseMessages.SUCCESS_DELETE_TRIP));
     }
 
+    @ApiOperation("여행 유저 조회")
+    @GetMapping("/members")
+    public ResponseEntity<List<UserInfoResponse>> getMember(@LoginId long id, @RequestParam UUID tripId) {
+        return ResponseEntity.ok().body(tripService.getMember(id, tripId));
+    }
 
 }

@@ -1,18 +1,17 @@
 spring:
-  h2:
-    console:
-      enabled: true  # H2 웹 콘솔 사용
   datasource:
-    driver-class-name: org.h2.Driver  #h2 드라이버 설정
-    url: jdbc:h2:mem:testdb  #접속 URL
-    username: sa  # 사용자 이름 (로그인 시 사용)
-    password:   # 사용자 암호 (로그인 시 사용)
+    url: jdbc:mysql://rds엔드포인트:포트명/database이름
+    username: db계정
+    password: db계정 비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        #    show_sql: true
-        format_sql: true
+      ddl-auto: none
+
 logging.level:
   org.hibernate.SQL: debug
+
+jwt:
+  issuer: 이슈
+  secret: 시크릿키
