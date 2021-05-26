@@ -52,7 +52,7 @@ public class TripService {
             if (userInfoResponse.getUserId() == id) {
                 userInfoResponse.updateMe();
                 index = userInfoResponseList.indexOf(userInfoResponse);
-                if (userInfoResponseList.size() > 1) {
+                if (!userInfoResponseList.isEmpty()) {
                     Collections.swap(userInfoResponseList, 0, index);
                 }
                 break;
