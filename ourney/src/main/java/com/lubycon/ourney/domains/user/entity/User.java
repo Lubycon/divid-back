@@ -35,7 +35,7 @@ public class User {
     private List<UserTripMap> userTripMaps = new ArrayList<>();
 
     @Builder
-    public User(long kakaoId, String nickName, String email,String profileImg){
+    public User(long kakaoId, String nickName, String email, String profileImg){
         this.kakaoId = kakaoId;
         this.nickName = nickName;
         this.email = email;
