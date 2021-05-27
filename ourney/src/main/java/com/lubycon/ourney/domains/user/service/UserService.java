@@ -8,6 +8,7 @@ import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import com.lubycon.ourney.domains.user.dto.UserInfoRequest;
+import com.lubycon.ourney.domains.user.entity.ProfileImg;
 import com.lubycon.ourney.domains.user.entity.User;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.exception.UserNotFoundException;
@@ -37,7 +38,7 @@ public class UserService {
                 .kakaoId(request.getKakaoId())
                 .nickName(request.getNickName())
                 .email(request.getEmail())
-                .profileImg(request.getProfile())
+                .profileImg(ProfileImg.getRandom().name())
                 .build();
         userRepository.save(user);
 
