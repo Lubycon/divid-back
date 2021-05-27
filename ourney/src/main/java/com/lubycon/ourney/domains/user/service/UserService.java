@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.common.ResponseMessages;
-import com.lubycon.ourney.domains.trip.entity.UserTripMapRepository;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import com.lubycon.ourney.domains.user.dto.UserInfoRequest;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,7 +26,6 @@ import java.net.URL;
 public class UserService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final UserTripMapRepository userTripMapRepository;
 
     public TokenResponse login(LoginRequest request) {
         Long userId = userRepository.findIdByKakaoId(request.getKakaoId());
@@ -84,16 +81,6 @@ public class UserService {
     }
 
     @Transactional
-    public void updateToken(
-            long userId,
-            @NotNull String refreshToken
-    ) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
-        user.updateRefreshToken(refreshToken);
-    }
-
-    @Transactional
     public void updateUser(long userId, UserInfoRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
@@ -112,5 +99,5 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessages.NOT_EXIST_USER + userId));
         userRepository.delete(user);
     }
-    
+
 }
