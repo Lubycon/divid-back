@@ -1,5 +1,7 @@
 package com.lubycon.ourney.domains.trip.service;
 
+import com.lubycon.ourney.domains.expense.dto.AmountResponse;
+import com.lubycon.ourney.domains.expense.entity.ExpenseDetailRepository;
 import com.lubycon.ourney.domains.trip.dto.CreateTripRequest;
 import com.lubycon.ourney.domains.trip.dto.TripListResponse;
 import com.lubycon.ourney.domains.trip.dto.TripResponse;
@@ -27,6 +29,7 @@ public class TripService {
     private final TripRepository tripRepository;
     private final UserTripMapRepository userTripMapRepository;
     private final UserTripMapService userTripMapService;
+    private final ExpenseDetailRepository expenseDetailRepository;
 
     public List<TripListResponse> getTripList(long id) {
         List<TripListResponse> tripListResponseList = tripRepository.findAllByUserId(id);
@@ -42,9 +45,10 @@ public class TripService {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
         List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
+        AmountResponse amountResponse = expenseDetailRepository.findAmountByUserIdAndTripId(id, tripId);
 
         modifyUserInfoResponseList(id, userInfoResponseList);
-        return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), userInfoResponseList);
+        return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), amountResponse, userInfoResponseList);
     }
 
     private void modifyUserInfoResponseList(long id, List<UserInfoResponse> userInfoResponseList) {
