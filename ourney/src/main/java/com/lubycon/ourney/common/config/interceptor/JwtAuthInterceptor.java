@@ -26,24 +26,24 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws IllegalArgumentException {
-        String jwtAccessToken = request.getHeader(Constants.JWT_ACCESS_TOKEN);
-        String jwtRefreshToken = request.getHeader(Constants.JWT_REFRESH_TOKEN);
+        String accessToken = request.getHeader(Constants.ACCESS_TOKEN);
+        String refreshToken = request.getHeader(Constants.REFRESH_TOKEN);
         if (StringUtils.equals(request.getMethod(), "OPTIONS")) {
             return true;
         }
 
         // 액세스 토큰이 만료되지 않아, 액세스 토큰만 보내는 경우
-        if (!Objects.isNull(jwtAccessToken) && Objects.isNull(jwtRefreshToken)) {
-            JwtValidationResult validateResult = jwtService.validate(jwtAccessToken);
+        if (!Objects.isNull(accessToken) && Objects.isNull(refreshToken)) {
+            JwtValidationResult validateResult = jwtService.validate(accessToken);
             if(validateResult.isValidation()){
                 request.setAttribute(Constants.HEADER_ID, validateResult.getId().toString());
             }else {
                 throw new IllegalArgumentException(ResponseMessages.TOKEN_ERROR);
             }
         } else {
-            JwtValidationResult validateResult = jwtService.validate(jwtRefreshToken);
+            JwtValidationResult validateResult = jwtService.validate(refreshToken);
             if(validateResult.isValidation()) {
-                reissueToken(response,jwtRefreshToken);
+                reissueToken(response,refreshToken);
                 request.setAttribute(Constants.HEADER_ID, validateResult.getId().toString());
             } else {
                 throw new IllegalArgumentException(ResponseMessages.TOKEN_ERROR);
@@ -59,8 +59,8 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
         String refreshTokenInDBMS = userRepository.findRefreshTokenById(jwtPayload.getId());
         if(refreshTokenInDBMS.equals(jwtRefreshToken)) {
             TokenResponse tokenResponse = jwtService.issue(jwtPayload.getId());
-            response.addHeader(Constants.JWT_ACCESS_TOKEN, tokenResponse.getAccessToken());
-            response.addHeader(Constants.JWT_REFRESH_TOKEN, tokenResponse.getRefreshToken());
+            response.addHeader(Constants.ACCESS_TOKEN, tokenResponse.getAccessToken());
+            response.addHeader(Constants.REFRESH_TOKEN, tokenResponse.getRefreshToken());
         }else {
             throw new IllegalArgumentException(ResponseMessages.TOKEN_ERROR);
         }
