@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-@CrossOrigin("*")
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @RestController
