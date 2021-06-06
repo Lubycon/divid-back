@@ -9,7 +9,6 @@ import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.dto.JwtPayload;
 import com.lubycon.ourney.domains.user.service.JwtService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
-@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtAuthInterceptor implements HandlerInterceptor {
@@ -30,9 +28,7 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
             throws IllegalArgumentException {
         String jwtAccessToken = request.getHeader(Constants.JWT_ACCESS_TOKEN);
         String jwtRefreshToken = request.getHeader(Constants.JWT_REFRESH_TOKEN);
-        log.debug("###Prehandle");
         if (StringUtils.equals(request.getMethod(), "OPTIONS")) {
-            log.debug("###if request options method is options, return true");
             return true;
         }
 
