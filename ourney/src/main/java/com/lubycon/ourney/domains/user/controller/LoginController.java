@@ -3,6 +3,7 @@ package com.lubycon.ourney.domains.user.controller;
 import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.error.SimpleSuccessResponse;
+import com.lubycon.ourney.domains.user.dto.JwtTokenResponse;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import com.lubycon.ourney.domains.user.service.JwtService;
@@ -26,21 +27,24 @@ public class LoginController {
 
     @ApiOperation("로그인/회원가입")
     @PostMapping(value = "/login")
-    public ResponseEntity<SimpleSuccessResponse> login(HttpServletResponse res, @RequestHeader("accessToken") String accessToken) {
+    public ResponseEntity<JwtTokenResponse> login(@RequestHeader("accessToken") String accessToken) {
         LoginRequest userInfo = userService.getUserInfo(accessToken);
         TokenResponse response;
-        SimpleSuccessResponse successResponse;
+        String message;
         if (userInfo.isMember()) {
             response = userService.login(userInfo);
-            successResponse = new SimpleSuccessResponse(ResponseMessages.SUCCESS_LOGIN);
+            message = ResponseMessages.SUCCESS_LOGIN;
         } else {
             response = userService.signUp(userInfo);
-            successResponse = new SimpleSuccessResponse(ResponseMessages.SUCCESS_SIGN_UP);
+            message = ResponseMessages.SUCCESS_SIGN_UP;
         }
         jwtService.updateToken(response.getUserId(), response.getRefreshToken());
-        res.addHeader(Constants.JWT_ACCESS_TOKEN, response.getAccessToken());
-        res.addHeader(Constants.JWT_REFRESH_TOKEN, response.getRefreshToken());
-        return ResponseEntity.ok().body(successResponse);
+        JwtTokenResponse jwtTokenResponse = JwtTokenResponse.builder()
+                .JwtAccessToken(response.getAccessToken())
+                .JwtRefreshToken(response.getRefreshToken())
+                .message(message)
+                .build();
+        return ResponseEntity.ok().body(jwtTokenResponse);
     }
 
 }
