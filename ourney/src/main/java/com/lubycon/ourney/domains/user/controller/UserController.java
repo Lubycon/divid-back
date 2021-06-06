@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
+@CrossOrigin("*")
 @RequiredArgsConstructor
 @RequestMapping("/users")
 @RestController
