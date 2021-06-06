@@ -9,18 +9,18 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class JwtTokenResponse {
+public class JwtResponse {
     @NotNull
-    private String JwtAccessToken;
+    private String accessToken;
     @Nullable
-    private String JwtRefreshToken;
+    private String refreshToken;
     @Nullable
     private String message;
 
     @Builder
-    public JwtTokenResponse(String JwtAccessToken, String JwtRefreshToken, String message){
-        this.JwtAccessToken = JwtAccessToken;
-        this.JwtRefreshToken = JwtRefreshToken;
+    public JwtResponse(String accessToken, String refreshToken, String message){
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.message = message;
     }
 }

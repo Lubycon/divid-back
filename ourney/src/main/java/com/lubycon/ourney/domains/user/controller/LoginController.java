@@ -1,9 +1,7 @@
 package com.lubycon.ourney.domains.user.controller;
 
-import com.lubycon.ourney.common.Constants;
 import com.lubycon.ourney.common.ResponseMessages;
-import com.lubycon.ourney.common.error.SimpleSuccessResponse;
-import com.lubycon.ourney.domains.user.dto.JwtTokenResponse;
+import com.lubycon.ourney.domains.user.dto.JwtResponse;
 import com.lubycon.ourney.domains.user.dto.LoginRequest;
 import com.lubycon.ourney.domains.user.dto.TokenResponse;
 import com.lubycon.ourney.domains.user.service.JwtService;
@@ -12,8 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -24,7 +20,7 @@ public class LoginController {
 
     @ApiOperation("로그인/회원가입")
     @PostMapping(value = "/login")
-    public ResponseEntity<JwtTokenResponse> login(@RequestHeader("accessToken") String accessToken) {
+    public ResponseEntity<JwtResponse> login(@RequestHeader("accessToken") String accessToken) {
         LoginRequest userInfo = userService.getUserInfo(accessToken);
         TokenResponse response;
         String message;
@@ -36,12 +32,12 @@ public class LoginController {
             message = ResponseMessages.SUCCESS_SIGN_UP;
         }
         jwtService.updateToken(response.getUserId(), response.getRefreshToken());
-        JwtTokenResponse jwtTokenResponse = JwtTokenResponse.builder()
-                .JwtAccessToken(response.getAccessToken())
-                .JwtRefreshToken(response.getRefreshToken())
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .accessToken(response.getAccessToken())
+                .refreshToken(response.getRefreshToken())
                 .message(message)
                 .build();
-        return ResponseEntity.ok().body(jwtTokenResponse);
+        return ResponseEntity.ok().body(jwtResponse);
     }
 
 }
