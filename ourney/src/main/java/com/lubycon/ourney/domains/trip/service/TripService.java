@@ -1,11 +1,8 @@
 package com.lubycon.ourney.domains.trip.service;
 
 import com.lubycon.ourney.domains.expense.dto.AmountResponse;
-import com.lubycon.ourney.domains.expense.dto.ExpenseListResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpensePersonalList;
-import com.lubycon.ourney.domains.expense.entity.ExpenseDetailRepository;
 import com.lubycon.ourney.domains.expense.entity.ExpenseRepository;
-import com.lubycon.ourney.domains.expense.service.ExpenseService;
 import com.lubycon.ourney.domains.trip.dto.CreateTripRequest;
 import com.lubycon.ourney.domains.trip.dto.TripListResponse;
 import com.lubycon.ourney.domains.trip.dto.TripResponse;
@@ -18,7 +15,6 @@ import com.lubycon.ourney.domains.trip.exception.TripAccessDeniedException;
 import com.lubycon.ourney.domains.trip.exception.TripNotFoundException;
 import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class TripService {
