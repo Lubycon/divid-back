@@ -13,6 +13,7 @@ import com.lubycon.ourney.domains.trip.service.UserTripMapService;
 import com.lubycon.ourney.domains.user.dto.UserInfoResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,9 +36,19 @@ public class TripController {
 
     @ApiOperation("여행 상세 조회")
     @GetMapping("")
+    public ResponseEntity getTripDetail(@LoginId long id, @RequestParam("tripId") UUID tripId) throws TripAccessDeniedException {
+        if(!tripService.checkTripMember(id, tripId)) {
+            return ResponseEntity.ok(new SimpleSuccessResponse("inviteCode 입력이 필요합니다."));
+        }else{
+            return ResponseEntity.ok(tripService.getTrip(id, tripId));
+        }
+    }
+
+    @ApiOperation("여행 멤버 등록")
+    @GetMapping("/join")
     public ResponseEntity getTripDetail(@LoginId long id, @RequestParam("tripId") UUID tripId, @RequestHeader(Constants.INVITE_CODE) String inviteCode) throws TripAccessDeniedException {
         tripService.checkTripAuth(id, tripId, inviteCode);
-        return ResponseEntity.ok(tripService.getTrip(id, tripId));
+        return ResponseEntity.ok(new SimpleSuccessResponse("여행 멤버 등록 완료되었습니다."));
     }
 
     @ApiOperation("여행 생성")

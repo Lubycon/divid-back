@@ -145,4 +145,10 @@ public class TripService {
         modifyUserInfoResponseList(id, responses);
         return responses;
     }
+
+    public boolean checkTripMember(long id, UUID tripId) throws TripAccessDeniedException {
+        userTripMapRepository.findUserTripMapByUserAndTrip(id, tripId)
+                .orElseThrow(() -> new TripAccessDeniedException(id));
+        return true;
+    }
 }
