@@ -102,15 +102,15 @@ public class ExpenseService {
     public List<ExpenseListResponse> getExpenseList(long id, UUID tripId) {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException(tripId + " 값에 해당하는 여행이 없습니다."));
-        LocalDate date = trip.getStartDate();
+
+        List<LocalDate> dates = expenseRepository.getPayDateByTripId(tripId);
         List<ExpenseListResponse> listInfoResponses = new ArrayList<>();
-        while (!date.equals(trip.getEndDate().plusDays(1))) {
+        for(LocalDate date : dates) {
             listInfoResponses.add(ExpenseListResponse.builder()
                     .tripTotalPrice(expenseRepository.getSumByTripId(tripId))
                     .payDate(date)
                     .detailResponses(getExpenseListElement(id, tripId, date))
                     .build());
-            date = date.plusDays(1);
         }
         listInfoResponses.sort((o1, o2) -> {
             if (o1.getPayDate().isBefore(o2.getPayDate())) {
@@ -135,4 +135,5 @@ public class ExpenseService {
         }
         return responses;
     }
+
 }

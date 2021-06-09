@@ -15,6 +15,9 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     Expense findExpenseByTripIdAndExpenseId(@Param("tripId") UUID tripId, @Param("expenseId") long expenseId);
 
+    @Query("SELECT DISTINCT e.payDate FROM Expense e WHERE e.tripId = :tripId")
+    List<LocalDate> getPayDateByTripId(@Param("tripId") UUID tripId);
+
     @Query("SELECT SUM(e.totalPrice) FROM Expense e WHERE e.tripId = :tripId")
     Long getSumByTripId(@Param("tripId") UUID tripId);
 
