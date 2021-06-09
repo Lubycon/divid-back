@@ -4,6 +4,6 @@ import java.nio.file.AccessDeniedException;
 
 public class TripAccessDeniedException extends AccessDeniedException {
     public TripAccessDeniedException(Long target) {
-        super(target + "acess denied");
+        super(target + "access denied");
     }
 }

@@ -1,6 +1,8 @@
 package com.lubycon.ourney.domains.expense.entity;
 
+import com.lubycon.ourney.domains.expense.dto.AmountResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpenseListElementResponse;
+import com.lubycon.ourney.domains.expense.dto.ExpensePersonalList;
 import com.lubycon.ourney.domains.expense.dto.GetExpenseDetailResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -4,9 +4,11 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public class ExpenseDetailRequest {
+public class CalcListResponse {
     @NotNull
-    private long userId;
+    private Long giveAmount;
     @NotNull
-    private long price;
+    private Long takeAmount;
+
+
 }

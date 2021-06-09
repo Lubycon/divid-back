@@ -64,10 +64,10 @@ public class ExpenseService {
                 .build();
         expenseRepository.save(expense);
         Long expenseId = expenseRepository.findIdByTitleAndPayDate(expenseRequest.getTitle(), expenseRequest.getPayDate());
-        saveExpenseDetail(id, expenseRequest.getExpenseDetails(), expenseId);
+        saveExpenseDetail(expenseRequest.getExpenseDetails(), expenseId);
     }
 
-    private void saveExpenseDetail(long id, List<ExpenseDetailRequest> expenseDetailRequests, Long expenseId) {
+    private void saveExpenseDetail(List<ExpenseDetailRequest> expenseDetailRequests, Long expenseId) {
         for (ExpenseDetailRequest expenseDetailRequest : expenseDetailRequests) {
             ExpenseDetail expenseDetail = ExpenseDetail.builder()
                     .expenseId(expenseId)
@@ -75,9 +75,6 @@ public class ExpenseService {
                     .price(expenseDetailRequest.getPrice())
                     .build();
             expenseDetailRepository.save(expenseDetail);
-            if (expenseDetailRequest.getUserId() == id) {
-                expenseDetailRequest.updateMe();
-            }
         }
     }
 
@@ -90,7 +87,7 @@ public class ExpenseService {
         expenseDetailRepository.deleteAll(expenseDetails);
 
         List<ExpenseDetailRequest> detailRequests = expenseRequest.getExpenseDetails();
-        saveExpenseDetail(id, detailRequests, expenseId);
+        saveExpenseDetail(detailRequests, expenseId);
     }
 
     @Transactional

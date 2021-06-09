@@ -1,5 +1,8 @@
 package com.lubycon.ourney.domains.trip.service;
 
+import com.lubycon.ourney.domains.expense.dto.AmountResponse;
+import com.lubycon.ourney.domains.expense.dto.ExpensePersonalList;
+import com.lubycon.ourney.domains.expense.entity.ExpenseRepository;
 import com.lubycon.ourney.domains.trip.dto.CreateTripRequest;
 import com.lubycon.ourney.domains.trip.dto.TripListResponse;
 import com.lubycon.ourney.domains.trip.dto.TripResponse;
@@ -20,13 +23,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Service
 public class TripService {
     private final TripRepository tripRepository;
     private final UserTripMapRepository userTripMapRepository;
     private final UserTripMapService userTripMapService;
+    private final ExpenseRepository expenseRepository;
 
     public List<TripListResponse> getTripList(long id) {
         List<TripListResponse> tripListResponseList = tripRepository.findAllByUserId(id);
@@ -42,9 +46,23 @@ public class TripService {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
         List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
-
         modifyUserInfoResponseList(id, userInfoResponseList);
-        return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), userInfoResponseList);
+        return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), getAmount(id, tripId), userInfoResponseList);
+    }
+    public AmountResponse getAmount(long id, UUID tripId){
+        //조회하는 사람 기준으로 ( 갚을 돈: 남이 낸 것 중 - 본인의 몫 사용 내역 / 받을 돈 : 내가 내고 - 남이 먹은 것)
+        List<ExpensePersonalList> responses = expenseRepository.findAllByTripId(tripId);
+        AmountResponse response = AmountResponse.builder()
+                .giveAmount(responses.stream()
+                        .filter(l->l.getPayerId()!=id)
+                        .filter(l->l.getUserId()==id)
+                        .mapToLong(l->l.getPrice()).sum())
+                .takeAmount(responses.stream()
+                        .filter(l->l.getPayerId()==id)
+                        .filter(l->l.getUserId()!=id)
+                        .mapToLong(l->l.getPrice()).sum())
+                .build();
+        return response;
     }
 
     private void modifyUserInfoResponseList(long id, List<UserInfoResponse> userInfoResponseList) {
@@ -126,5 +144,11 @@ public class TripService {
         List<UserInfoResponse> responses = userTripMapRepository.findAllByTripId(tripId);
         modifyUserInfoResponseList(id, responses);
         return responses;
+    }
+
+    public boolean checkTripMember(long id, UUID tripId) throws TripAccessDeniedException {
+        userTripMapRepository.findUserTripMapByUserAndTrip(id, tripId)
+                .orElseThrow(() -> new TripAccessDeniedException(id));
+        return true;
     }
 }
