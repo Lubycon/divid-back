@@ -13,11 +13,9 @@ public class ExpenseRequest {
     private UUID tripId;
     @NotNull
     private LocalDate payDate;
-    @NotNull
     private long totalPrice;
     @NotNull
     private String title;
-    @NotNull
     private long payerId;
     @NotNull
     private boolean individual;
