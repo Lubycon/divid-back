@@ -7,17 +7,13 @@ import org.jetbrains.annotations.Nullable;
 
 @Getter
 public class ExpensePersonalList {
-    @NotNull
     private long expenseId;
-    @NotNull
     private long payerId;
-    @NotNull
     private long userId;
-    @NotNull
-    private Long price;
+    private long price;
 
     @Builder
-    public ExpensePersonalList(long expenseId, long payerId, long userId, @NotNull Long price) {
+    public ExpensePersonalList(long expenseId, long payerId, long userId, long price) {
         this.expenseId = expenseId;
         this.payerId = payerId;
         this.userId = userId;

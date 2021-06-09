@@ -39,9 +39,8 @@ public class TripController {
     public ResponseEntity getTripDetail(@LoginId long id, @RequestParam("tripId") UUID tripId) throws TripAccessDeniedException {
         if(!tripService.checkTripMember(id, tripId)) {
             return ResponseEntity.ok(new SimpleSuccessResponse("inviteCode 입력이 필요합니다."));
-        }else{
-            return ResponseEntity.ok(tripService.getTrip(id, tripId));
         }
+        return ResponseEntity.ok(tripService.getTrip(id, tripId));
     }
 
     @ApiOperation("여행 멤버 등록")
