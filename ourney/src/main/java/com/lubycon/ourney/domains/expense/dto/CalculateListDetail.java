@@ -15,8 +15,6 @@ public class CalculateListDetail {
     private String nickName;
     private long userId;
     private long payerId;
-    @NotNull
-    private LocalDate payDate;
     private long price;
     @Nullable
     private Type type;
@@ -27,7 +25,6 @@ public class CalculateListDetail {
         this.nickName = nickName;
         this.userId = userId;
         this.payerId = payerId;
-        this.payDate = payDate;
         this.price = price;
     }
     public void check(long loginId, long payerId, long id){

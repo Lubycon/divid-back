@@ -3,10 +3,7 @@ package com.lubycon.ourney.domains.expense.controller;
 import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.config.interceptor.LoginId;
 import com.lubycon.ourney.common.error.SimpleSuccessResponse;
-import com.lubycon.ourney.domains.expense.dto.CalculateListResponse;
-import com.lubycon.ourney.domains.expense.dto.CalculateSummaryResponse;
-import com.lubycon.ourney.domains.expense.dto.ExpenseListResponse;
-import com.lubycon.ourney.domains.expense.dto.ExpenseRequest;
+import com.lubycon.ourney.domains.expense.dto.*;
 import com.lubycon.ourney.domains.expense.service.ExpenseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +75,7 @@ public class ExpenseController {
 
     @ApiOperation("정산 상세 내역 조회")
     @GetMapping("/calculate/all")
-    public ResponseEntity<List<CalculateListResponse>> getCalculateList(
+    public ResponseEntity<List<CalculateListDateResponse>> getCalculateList(
             @LoginId long id,
             @RequestParam UUID tripId
     ){

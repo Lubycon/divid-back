@@ -134,17 +134,17 @@ public class ExpenseService {
         return responses;
     }
 
-    public List<CalculateListResponse> getCalculateList(long id, UUID tripId) {
+    public List<CalculateListDateResponse> getCalculateList(long id, UUID tripId) {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException(tripId + " 값에 해당하는 여행이 없습니다."));
         List<LocalDate> dates = expenseRepository.getPayDateByTripId(tripId);
-        List<CalculateListResponse> calculateListResponses = new ArrayList<>();
+        List<CalculateListDateResponse> dateResponses = new ArrayList<>();
         for(LocalDate date : dates) {
+            List<CalculateListResponse> calculateListResponses = new ArrayList<>();
             List<ExpenseListElementResponse> responses = expenseDetailRepository.findAllByTripIdAndPayDate(tripId, date);
             for(ExpenseListElementResponse response : responses) {
                 calculateListResponses.add(CalculateListResponse.builder()
                         .id(response.getUserId())
-                        .payDate(date)
                         .totalPrice(response.getTotalPrice())
                         .title(response.getTitle())
                         .profileImg(response.getProfileImg())
@@ -152,25 +152,16 @@ public class ExpenseService {
                         .calculateListDetails(expenseDetailRepository.findCalculateAllByTripIdAndPayDate(tripId, date))
                         .build());
             }
+            dateResponses.add(CalculateListDateResponse.builder()
+                    .payDate(date)
+                    .calculateListDetails(calculateListResponses)
+                    .build());
         }
-        modifyCalculateListElement(calculateListResponses, id);
-
-        return calculateListResponses;
-    }
-
-    public List<CalculateListResponse> modifyCalculateListElement(List<CalculateListResponse> responses, long id) {
-        if (!responses.isEmpty()) {
-            for (CalculateListResponse response : responses) {
-                if (response.getId() == id) {
-                    response.updateMe();
-                }
-                for(CalculateListDetail detail : response.getCalculateListDetails()){
-                    detail.check(id, detail.getPayerId(), detail.getUserId());
-                }
-            }
+        for(CalculateListDateResponse response : dateResponses) {
+            modifyCalculateListElement(response.getCalculateListDetails(), id);
         }
-        /* 등록 역순 */
-        responses.sort((o1, o2) -> {
+
+        dateResponses.sort((o1, o2) -> {
             if (o1.getPayDate().isBefore(o2.getPayDate())) {
                 return 1;
             } else if (o1.getPayDate().isAfter(o2.getPayDate())) {
@@ -179,7 +170,23 @@ public class ExpenseService {
                 return 0;
             }
         });
-        return responses;
+
+        return dateResponses;
+    }
+
+    public List<CalculateListResponse> modifyCalculateListElement(List<CalculateListResponse> calculateListResponses, long id) {
+        if (!calculateListResponses.isEmpty()) {
+            for (CalculateListResponse response : calculateListResponses) {
+                if (response.getId() == id) {
+                    response.updateMe();
+                }
+                for (CalculateListDetail detail : response.getCalculateListDetails()) {
+                    detail.check(id, detail.getPayerId(), detail.getUserId());
+                }
+            }
+        }
+
+        return calculateListResponses;
     }
 
     public CalculateSummaryResponse getCalculateSummary(long id, UUID tripId){
