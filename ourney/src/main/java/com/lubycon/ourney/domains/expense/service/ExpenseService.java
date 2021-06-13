@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -182,5 +180,47 @@ public class ExpenseService {
             }
         });
         return responses;
+    }
+
+    public CalculateSummaryResponse getCalculateSummary(long id, UUID tripId){
+        List<CalculateSummaryDetail> details = expenseDetailRepository.findCalculateSummaryByTripId(tripId);
+        List<CalculateSummaryDetail> responses = new ArrayList<>();
+        HashMap<Long, Long> summary = new HashMap<>();
+        for(CalculateSummaryDetail detail : details){
+            if(detail.getPayerId() != id && detail.getUserId() == id){ // GIVE
+                if(summary.containsKey(detail.getPayerId())){
+                    summary.put(detail.getPayerId(), summary.get(detail.getPayerId())+detail.getPrice());
+                }else{
+                    summary.put(detail.getPayerId(), detail.getPrice());
+                }
+            }
+            else if(detail.getPayerId() == id && detail.getUserId() != id){ // TAKE
+                if(summary.containsKey(detail.getUserId())){
+                    summary.put(detail.getUserId(), summary.get(detail.getUserId())-detail.getPrice());
+                }else{
+                    summary.put(detail.getUserId(), (-1)*detail.getPrice());
+                }
+            }
+        }
+        System.out.println("===================================");
+        for (Map.Entry<Long, Long> entry : summary.entrySet()) {
+            System.out.println("[key]:" + entry.getKey() + ", [value]:" + entry.getValue());
+        }
+        System.out.println("===================================");
+
+        for(Map.Entry<Long, Long> entry : summary.entrySet()){
+            User user = userRepository.findById(entry.getKey()).orElseThrow(() -> new UserNotFoundException(entry.getKey() + " 값에 해당하는 여행이 없습니다."));
+            responses.add(CalculateSummaryDetail.builder()
+                    .profileImg(user.getProfileImg())
+                    .nickName(user.getNickName())
+                    .userId(id)
+                    .price(summary.get(entry.getKey()))
+                    .build());
+        }
+
+        return CalculateSummaryResponse.builder()
+                .nickName(userRepository.findById(id).get().getNickName())
+                .detailList(responses)
+                .build();
     }
 }

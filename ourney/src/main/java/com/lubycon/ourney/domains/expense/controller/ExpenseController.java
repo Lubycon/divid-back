@@ -4,6 +4,7 @@ import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.config.interceptor.LoginId;
 import com.lubycon.ourney.common.error.SimpleSuccessResponse;
 import com.lubycon.ourney.domains.expense.dto.CalculateListResponse;
+import com.lubycon.ourney.domains.expense.dto.CalculateSummaryResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpenseListResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpenseRequest;
 import com.lubycon.ourney.domains.expense.service.ExpenseService;
@@ -82,5 +83,14 @@ public class ExpenseController {
             @RequestParam UUID tripId
     ){
         return ResponseEntity.ok(expenseService.getCalculateList(id, tripId));
+    }
+
+    @ApiOperation("정산 결과 조회")
+    @GetMapping("/calculate/summary")
+    public ResponseEntity<CalculateSummaryResponse> getCalculate(
+            @LoginId long id,
+            @RequestParam UUID tripId
+    ){
+        return ResponseEntity.ok(expenseService.getCalculateSummary(id, tripId));
     }
 }

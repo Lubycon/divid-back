@@ -1,6 +1,7 @@
 package com.lubycon.ourney.domains.expense.entity;
 
 import com.lubycon.ourney.domains.expense.dto.CalculateListDetail;
+import com.lubycon.ourney.domains.expense.dto.CalculateSummaryDetail;
 import com.lubycon.ourney.domains.expense.dto.ExpenseListElementResponse;
 import com.lubycon.ourney.domains.expense.dto.GetExpenseDetailResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,5 +31,11 @@ public interface ExpenseDetailRepository extends JpaRepository<ExpenseDetail, Lo
             " AND e.tripId = :tripId AND e.payDate = :payDate" +
             " ORDER BY e.expenseId DESC")
     List<CalculateListDetail> findCalculateAllByTripIdAndPayDate(@Param("tripId") UUID tripId, @Param("payDate") LocalDate payDate);
+
+    @Query("SELECT new com.lubycon.ourney.domains.expense.dto.CalculateSummaryDetail(u.profileImg, u.nickName, u.id, e.payerId, d.price) " +
+            "FROM User u, Expense e, ExpenseDetail d" +
+            " WHERE u.id = d.userId AND e.expenseId = d.expenseId" +
+            " AND e.tripId = :tripId")
+    List<CalculateSummaryDetail> findCalculateSummaryByTripId(@Param("tripId") UUID tripId);
 
 }
