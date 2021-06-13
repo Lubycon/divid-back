@@ -202,12 +202,6 @@ public class ExpenseService {
                 }
             }
         }
-        System.out.println("===================================");
-        for (Map.Entry<Long, Long> entry : summary.entrySet()) {
-            System.out.println("[key]:" + entry.getKey() + ", [value]:" + entry.getValue());
-        }
-        System.out.println("===================================");
-
         for(Map.Entry<Long, Long> entry : summary.entrySet()){
             User user = userRepository.findById(entry.getKey()).orElseThrow(() -> new UserNotFoundException(entry.getKey() + " 값에 해당하는 여행이 없습니다."));
             responses.add(CalculateSummaryDetail.builder()

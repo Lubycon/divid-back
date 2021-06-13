@@ -27,6 +27,18 @@ public class CalculateSummaryDetail {
         this.userId = userId;
         this.payerId = payerId;
         this.price = price;
+        check(price);
     }
 
+    public void check(long price){
+        if(price < 0 ){
+            this.type = Type.TAKE;
+        }
+        else if(price > 0){
+            this.type = Type.GIVE;
+        }
+        else{
+            this.type = Type.NO;
+        }
+    }
 }
