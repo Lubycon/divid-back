@@ -74,15 +74,13 @@ public class ExpenseController {
     ) {
         return ResponseEntity.ok(expenseService.getExpenseList(id, tripId));
     }
-/*
+
     @ApiOperation("정산 상세 내역 조회")
-    @GetMapping("")
-    public ResponseEntity<List<CalculateListResponse>> getCalcList(
+    @GetMapping("/calculate/all")
+    public ResponseEntity<List<CalculateListResponse>> getCalculateList(
             @LoginId long id,
             @RequestParam UUID tripId
     ){
-        return ResponseEntity.ok(expenseService.getCalcList(id, tripId));
+        return ResponseEntity.ok(expenseService.getCalculateList(id, tripId));
     }
-
- */
 }

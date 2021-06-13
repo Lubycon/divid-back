@@ -19,7 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(jwtAuthInterceptor)
-                .addPathPatterns("/users/**","/trips**", "/trips/**", "/expenses**", "/expenses/**");
+                .addPathPatterns("/users/**","/trips**", "/trips/**", "/expenses**", "/expenses/**", "/expenses/calculate/**"
+
+
+
+                );
     }
 
     @Override
