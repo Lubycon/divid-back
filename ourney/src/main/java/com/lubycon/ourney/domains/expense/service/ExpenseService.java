@@ -103,16 +103,16 @@ public class ExpenseService {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException(tripId + " 값에 해당하는 여행이 없습니다."));
         List<LocalDate> dates = expenseRepository.getPayDateByTripId(tripId);
-        List<ExpenseListResponse> listInfoResponses = new ArrayList<>();
+        List<ExpenseListResponse> responses = new ArrayList<>();
         for(LocalDate date : dates) {
-           listInfoResponses.add(ExpenseListResponse.builder()
+           responses.add(ExpenseListResponse.builder()
                     .tripTotalPrice(expenseRepository.getSumByTripId(tripId))
                     .payDate(date)
                     .detailResponses(getExpenseListElement(id, tripId, date))
                     .build());
         }
 
-        listInfoResponses.sort((o1, o2) -> {
+        responses.sort((o1, o2) -> {
             if (o1.getPayDate().isBefore(o2.getPayDate())) {
                 return 1;
             } else if (o1.getPayDate().isAfter(o2.getPayDate())) {
@@ -121,7 +121,7 @@ public class ExpenseService {
                 return 0;
             }
         });
-        return listInfoResponses;
+        return responses;
     }
 
     public List<ExpenseListElementResponse> getExpenseListElement(long id, UUID tripId, LocalDate date) {
@@ -171,8 +171,6 @@ public class ExpenseService {
                 }
             }
         }
-
-
         /* 등록 역순 */
         responses.sort((o1, o2) -> {
             if (o1.getPayDate().isBefore(o2.getPayDate())) {
