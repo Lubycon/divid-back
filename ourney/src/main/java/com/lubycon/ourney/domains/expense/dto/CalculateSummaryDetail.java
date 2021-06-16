@@ -5,36 +5,40 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Getter
-public class CalculateListDetail {
+public class CalculateSummaryDetail {
     @NotNull
     private String profileImg;
     @NotNull
     private String nickName;
     private long userId;
-    private long payerId;
+    @Nullable
+    private Long payerId;
     private long price;
     @Nullable
     private Type type;
 
     @Builder
-    public CalculateListDetail(@NotNull String profileImg, @NotNull String nickName, long userId, long payerId, @NotNull LocalDate payDate, long price) {
+    public CalculateSummaryDetail(@NotNull String profileImg, @NotNull String nickName, long userId, long payerId, long price) {
         this.profileImg = profileImg;
         this.nickName = nickName;
         this.userId = userId;
         this.payerId = payerId;
         this.price = price;
+        check(price);
     }
-    public void check(long loginId, long payerId, long id){
-        if(payerId != loginId && id == loginId){
-            this.type = Type.GIVE;
-        }else if(payerId == loginId && userId != loginId){
+
+    public void check(long price){
+        if(price < 0 ){
             this.type = Type.TAKE;
-        }else{
+        }
+        else if(price > 0){
+            this.type = Type.GIVE;
+        }
+        else{
             this.type = Type.NO;
         }
     }
-
 }

@@ -3,7 +3,8 @@ package com.lubycon.ourney.domains.expense.controller;
 import com.lubycon.ourney.common.ResponseMessages;
 import com.lubycon.ourney.common.config.interceptor.LoginId;
 import com.lubycon.ourney.common.error.SimpleSuccessResponse;
-import com.lubycon.ourney.domains.expense.dto.CalculateListResponse;
+import com.lubycon.ourney.domains.expense.dto.CalculateListDateResponse;
+import com.lubycon.ourney.domains.expense.dto.CalculateSummaryResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpenseListResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpenseRequest;
 import com.lubycon.ourney.domains.expense.service.ExpenseService;
@@ -74,15 +75,22 @@ public class ExpenseController {
     ) {
         return ResponseEntity.ok(expenseService.getExpenseList(id, tripId));
     }
-/*
+
     @ApiOperation("정산 상세 내역 조회")
-    @GetMapping("")
-    public ResponseEntity<List<CalculateListResponse>> getCalcList(
+    @GetMapping("/calculate/all")
+    public ResponseEntity<List<CalculateListDateResponse>> getCalculateList(
             @LoginId long id,
             @RequestParam UUID tripId
     ){
-        return ResponseEntity.ok(expenseService.getCalcList(id, tripId));
+        return ResponseEntity.ok(expenseService.getCalculateList(id, tripId));
     }
 
- */
+    @ApiOperation("정산 결과 조회")
+    @GetMapping("/calculate/summary")
+    public ResponseEntity<CalculateSummaryResponse> getCalculate(
+            @LoginId long id,
+            @RequestParam UUID tripId
+    ){
+        return ResponseEntity.ok(expenseService.getCalculateSummary(id, tripId));
+    }
 }
