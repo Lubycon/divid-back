@@ -20,7 +20,7 @@ public class LoginController {
 
     @ApiOperation("로그인/회원가입")
     @PostMapping(value = "/login")
-    public ResponseEntity<JwtResponse> login(@RequestHeader("accessToken") String accessToken) {
+    public ResponseEntity<JwtResponse> login(@RequestHeader("kakaoAccessToken") String accessToken) {
         LoginRequest userInfo = userService.getUserInfo(accessToken);
         TokenResponse response;
         String message;
