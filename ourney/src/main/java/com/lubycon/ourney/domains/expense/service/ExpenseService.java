@@ -28,6 +28,10 @@ public class ExpenseService {
     private final UserRepository userRepository;
     private final TripRepository tripRepository;
 
+    private Trip getTrip(UUID tripId){
+        return tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException(tripId + " 값에 해당하는 여행이 없습니다."));
+    }
     public GetExpenseResponse getExpense(long id, UUID tripId, long expenseId) {
         Expense expense = expenseRepository.findExpenseByTripIdAndExpenseId(tripId, expenseId);
         User user = userRepository.findById(id)
@@ -98,10 +102,9 @@ public class ExpenseService {
     }
 
     public List<ExpenseListResponse> getExpenseList(long id, UUID tripId) {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException(tripId + " 값에 해당하는 여행이 없습니다."));
+        Trip trip = getTrip(tripId);
         List<LocalDate> dates = expenseRepository.getPayDateByTripId(tripId);
-        List<ExpenseListResponse> responses = new ArrayList<>();
+        List<ExpenseListResponse> responses = new ArrayList<>(dates.size());
         for(LocalDate date : dates) {
            responses.add(ExpenseListResponse.builder()
                     .tripTotalPrice(expenseRepository.getSumByTripId(tripId))
@@ -135,8 +138,7 @@ public class ExpenseService {
     }
 
     public List<CalculateListDateResponse> getCalculateList(long id, UUID tripId) {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException(tripId + " 값에 해당하는 여행이 없습니다."));
+        Trip trip = getTrip(tripId);
         List<LocalDate> dates = expenseRepository.getPayDateByTripId(tripId);
         List<CalculateListDateResponse> dateResponses = new ArrayList<>();
         for(LocalDate date : dates) {
@@ -161,15 +163,7 @@ public class ExpenseService {
             modifyCalculateListElement(response.getCalculateListDetails(), id);
         }
 
-        dateResponses.sort((o1, o2) -> {
-            if (o1.getPayDate().isBefore(o2.getPayDate())) {
-                return 1;
-            } else if (o1.getPayDate().isAfter(o2.getPayDate())) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
+        dateResponses.stream().sorted();
 
         return dateResponses;
     }
@@ -224,4 +218,6 @@ public class ExpenseService {
                 .detailList(responses)
                 .build();
     }
+
+
 }

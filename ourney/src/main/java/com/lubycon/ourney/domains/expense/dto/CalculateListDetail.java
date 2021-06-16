@@ -29,11 +29,11 @@ public class CalculateListDetail {
     }
     public void check(long loginId, long payerId, long id){
         if(payerId != loginId && id == loginId){
-            type = Type.GIVE;
+            this.type = Type.GIVE;
         }else if(payerId == loginId && userId != loginId){
-            type = Type.TAKE;
+            this.type = Type.TAKE;
         }else{
-            type = Type.NO;
+            this.type = Type.NO;
         }
     }
 

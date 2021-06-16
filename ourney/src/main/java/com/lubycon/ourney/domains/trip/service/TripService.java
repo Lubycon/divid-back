@@ -3,10 +3,7 @@ package com.lubycon.ourney.domains.trip.service;
 import com.lubycon.ourney.domains.expense.dto.AmountResponse;
 import com.lubycon.ourney.domains.expense.dto.ExpensePersonalList;
 import com.lubycon.ourney.domains.expense.entity.ExpenseRepository;
-import com.lubycon.ourney.domains.trip.dto.CreateTripRequest;
-import com.lubycon.ourney.domains.trip.dto.TripListResponse;
-import com.lubycon.ourney.domains.trip.dto.TripResponse;
-import com.lubycon.ourney.domains.trip.dto.UpdateTripRequest;
+import com.lubycon.ourney.domains.trip.dto.*;
 import com.lubycon.ourney.domains.trip.entity.Trip;
 import com.lubycon.ourney.domains.trip.entity.TripRepository;
 import com.lubycon.ourney.domains.trip.entity.UserTripMap;
@@ -150,5 +147,16 @@ public class TripService {
         userTripMapRepository.findUserTripMapByUserAndTrip(id, tripId)
                 .orElseThrow(() -> new TripAccessDeniedException(id));
         return true;
+    }
+
+    public TripInfoResponse getTripInfo(UUID tripId){
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
+        return TripInfoResponse.builder()
+        .tripName(trip.getTripName())
+        .startDate(trip.getStartDate())
+        .endDate(trip.getEndDate())
+        .memberCnt(tripRepository.findByTripId(tripId))
+                .build();
     }
 }
