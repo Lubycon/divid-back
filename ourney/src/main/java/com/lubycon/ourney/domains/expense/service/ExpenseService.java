@@ -51,6 +51,7 @@ public class ExpenseService {
                 .payerId(expense.getPayerId())
                 .profileImg(user.getProfileImg())
                 .nickName(user.getNickName())
+                .individual(expense.isIndividual())
                 .getExpenseDetails(expenseOneDetailResponses)
                 .build();
     }
@@ -163,7 +164,15 @@ public class ExpenseService {
             modifyCalculateListElement(response.getCalculateListDetails(), id);
         }
 
-        dateResponses.stream().sorted();
+        dateResponses.sort((o1, o2) -> {
+            if (o1.getPayDate().isBefore(o2.getPayDate())) {
+                return 1;
+            } else if (o1.getPayDate().isAfter(o2.getPayDate())) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
 
         return dateResponses;
     }
@@ -197,9 +206,9 @@ public class ExpenseService {
             }
             else if(detail.getPayerId() == id && detail.getUserId() != id){ // TAKE
                 if(summary.containsKey(detail.getUserId())){
-                    summary.put(detail.getUserId(), summary.get(detail.getUserId())-detail.getPrice());
+                    summary.put(detail.getUserId(), Math.abs(summary.get(detail.getUserId())-detail.getPrice()));
                 }else{
-                    summary.put(detail.getUserId(), (-1)*detail.getPrice());
+                    summary.put(detail.getUserId(), Math.abs((-1)*detail.getPrice()));
                 }
             }
         }
