@@ -12,14 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/oauth")
 @RestController
 public class LoginController {
     private final UserService userService;
     private final JwtService jwtService;
 
     @ApiOperation("로그인/회원가입")
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/kakao")
     public ResponseEntity<JwtResponse> login(@RequestHeader("kakaoAccessToken") String accessToken) {
         LoginRequest userInfo = userService.getUserInfo(accessToken);
         TokenResponse response;
