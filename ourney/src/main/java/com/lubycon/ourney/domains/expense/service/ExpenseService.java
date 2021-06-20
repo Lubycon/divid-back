@@ -66,8 +66,7 @@ public class ExpenseService {
                 .individual(expenseRequest.isIndividual())
                 .build();
         expenseRepository.save(expense);
-        Long expenseId = expenseRepository.findIdByTitleAndPayDate(expenseRequest.getTitle(), expenseRequest.getPayDate());
-        saveExpenseDetail(expenseRequest.getExpenseDetails(), expenseId);
+        saveExpenseDetail(expenseRequest.getExpenseDetails(), expenseRepository.getMaxExpenseId());
     }
 
     private void saveExpenseDetail(List<ExpenseDetailRequest> expenseDetailRequests, Long expenseId) {
