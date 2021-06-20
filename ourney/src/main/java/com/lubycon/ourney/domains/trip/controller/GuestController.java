@@ -1,6 +1,10 @@
 package com.lubycon.ourney.domains.trip.controller;
 
+import com.lubycon.ourney.common.config.interceptor.LoginId;
+import com.lubycon.ourney.common.error.SimpleSuccessResponse;
 import com.lubycon.ourney.domains.trip.dto.TripInfoResponse;
+import com.lubycon.ourney.domains.trip.entity.Trip;
+import com.lubycon.ourney.domains.trip.exception.TripAccessDeniedException;
 import com.lubycon.ourney.domains.trip.exception.TripNotFoundException;
 import com.lubycon.ourney.domains.trip.service.TripService;
 import io.swagger.annotations.ApiOperation;
@@ -22,7 +26,7 @@ public class GuestController {
     @ApiOperation("게스트 여행 조회")
     @GetMapping("")
     public ResponseEntity<TripInfoResponse> getTripInfo(@RequestParam("tripId") UUID tripId) throws TripNotFoundException{
+        Trip trip = tripService.checkTripExist(tripId);
         return ResponseEntity.ok(tripService.getTripInfo(tripId));
     }
-
 }

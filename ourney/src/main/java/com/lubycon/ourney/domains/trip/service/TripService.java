@@ -40,12 +40,17 @@ public class TripService {
     }
 
     public TripResponse getTrip(long id, UUID tripId) {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
+        Trip trip = checkTripExist(tripId);
         List<UserInfoResponse> userInfoResponseList = userTripMapRepository.findAllByTripId(tripId);
         modifyUserInfoResponseList(id, userInfoResponseList);
         return new TripResponse(trip.getTripId(), trip.getTripName(), trip.getInviteCode(), trip.getStartDate(), trip.getEndDate(), getAmount(id, tripId), userInfoResponseList);
     }
+
+    public Trip checkTripExist(UUID tripId) {
+        return tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
+    }
+
     public AmountResponse getAmount(long id, UUID tripId){
         //조회하는 사람 기준으로 ( 갚을 돈: 남이 낸 것 중 - 본인의 몫 사용 내역 / 받을 돈 : 내가 내고 - 남이 먹은 것)
         List<ExpensePersonalList> responses = expenseRepository.findAllByTripId(tripId);
@@ -100,8 +105,7 @@ public class TripService {
 
     @Transactional
     public void checkTripAuth(long id, UUID tripId, String inviteCode) throws TripAccessDeniedException {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
+        Trip trip = checkTripExist(tripId);
         Optional<UserTripMap> userTripMap = userTripMapRepository.findUserTripMapByUserAndTrip(id, trip.getTripId());
         if (trip.getInviteCode().equals(inviteCode) && userTripMap.isEmpty()) {
             enrollTrip(id, tripId);
@@ -117,8 +121,7 @@ public class TripService {
 
     @Transactional
     public void updateTripInfo(UUID tripId, UpdateTripRequest updateTripRequest) {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
+        Trip trip = checkTripExist(tripId);
         boolean tripStatus = checkTripStatus(updateTripRequest.getStartDate(), updateTripRequest.getEndDate());
         trip.updateTripInfo(updateTripRequest.getTripName(), updateTripRequest.getStartDate(), updateTripRequest.getEndDate(), tripStatus);
     }
@@ -150,8 +153,7 @@ public class TripService {
     }
 
     public TripInfoResponse getTripInfo(UUID tripId){
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException(tripId + "값에 해당하는 여행이 없습니다."));
+        Trip trip = checkTripExist(tripId);
         return TripInfoResponse.builder()
         .tripName(trip.getTripName())
         .startDate(trip.getStartDate())
