@@ -21,7 +21,7 @@ public class Trip {
     private UUID tripId;
 
     @Column(name = "trip_index")
-    private long tripIndex;
+    private Long tripIndex;
 
     @Column(name = "trip_name", length = 45, nullable = false)
     private String tripName;
