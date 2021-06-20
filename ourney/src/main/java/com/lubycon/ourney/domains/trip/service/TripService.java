@@ -82,7 +82,9 @@ public class TripService {
     }
 
     public UUID saveTrip(long userId, CreateTripRequest createTripRequest) {
+        long index = tripRepository.countAllByTripId();
         Trip trip = Trip.builder()
+                .tripIndex(index)
                 .tripName(createTripRequest.getTripName())
                 .startDate(createTripRequest.getStartDate())
                 .endDate(createTripRequest.getEndDate())
@@ -91,7 +93,7 @@ public class TripService {
                 .ownerId(userId)
                 .build();
         tripRepository.save(trip);
-        return tripRepository.findIdByTripName(createTripRequest.getTripName(), userId);
+        return tripRepository.findIdByTripName(createTripRequest.getTripName(), index-1, userId);
     }
 
     public boolean checkTripStatus(LocalDate startDate, LocalDate endDate) {
