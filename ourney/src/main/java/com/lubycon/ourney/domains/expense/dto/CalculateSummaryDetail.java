@@ -31,10 +31,10 @@ public class CalculateSummaryDetail {
     }
 
     public void check(long price){
-        if(price < 0 ){
+        if(price > 0 ){
             this.type = Type.TAKE;
         }
-        else if(price > 0){
+        else if(price < 0){
             this.type = Type.GIVE;
         }
         else{
