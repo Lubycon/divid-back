@@ -217,7 +217,7 @@ public class ExpenseService {
                     .profileImg(user.getProfileImg())
                     .nickName(user.getNickName())
                     .userId(id)
-                    .price(summary.get(entry.getKey()))
+                    .price(Math.abs(summary.get(entry.getKey())))
                     .build());
         }
 
