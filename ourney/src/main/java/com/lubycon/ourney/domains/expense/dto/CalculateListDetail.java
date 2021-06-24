@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 

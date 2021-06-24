@@ -34,7 +34,7 @@ public class ExpenseService {
     }
     public GetExpenseResponse getExpense(long id, UUID tripId, long expenseId) {
         Expense expense = expenseRepository.findExpenseByTripIdAndExpenseId(tripId, expenseId);
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(expense.getPayerId())
                 .orElseThrow(() -> new UserNotFoundException(id + "에 해당하는 유저가 없습니다."));
         List<GetExpenseDetailResponse> expenseOneDetailResponses = expenseDetailRepository.findAllByExpenseId(expenseId);
         for (GetExpenseDetailResponse getExpenseDetailResponse : expenseOneDetailResponses) {
@@ -185,6 +185,7 @@ public class ExpenseService {
                 for (CalculateListDetail detail : response.getCalculateListDetails()) {
                     detail.check(id, detail.getPayerId(), detail.getUserId());
                 }
+                response.getCalculateListDetails().stream().filter(r->!r.getType().equals(Type.NO));
             }
         }
 
@@ -227,5 +228,9 @@ public class ExpenseService {
                 .build();
     }
 
+    @Transactional
+    public void refineCalculateListDetail(){
+
+    }
 
 }
