@@ -181,6 +181,11 @@ public class ExpenseService {
             for (CalculateListResponse response : calculateListResponses) {
                 for (CalculateListDetail detail : response.getCalculateListDetails()) {
                     detail.check(id, detail.getPayerId(), detail.getUserId());
+                    if(detail.getType().equals(Type.GIVE) && detail.getUserId() == id){
+                        User user = userRepository.findById(detail.getPayerId())
+                                .orElseThrow(() -> new TripNotFoundException(detail.getPayerId() + " 값에 해당하는 여행이 없습니다."));
+                        detail.update(user.getProfileImg(), user.getNickName());
+                    }
                 }
                 if (response.getId() == id) {
                     response.updateMe();

@@ -28,6 +28,11 @@ public class CalculateListDetail {
         this.payerId = payerId;
         this.price = price;
     }
+
+    public void update(String profileImg, String nickName){
+        this.profileImg = profileImg;
+        this.nickName = nickName;
+    }
     public void check(long loginId, long payerId, long id){
         if(payerId == loginId && userId != id){
             this.type = Type.TAKE;
