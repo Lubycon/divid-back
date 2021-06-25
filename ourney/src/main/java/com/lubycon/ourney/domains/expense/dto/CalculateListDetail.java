@@ -29,7 +29,7 @@ public class CalculateListDetail {
         this.price = price;
     }
     public void check(long loginId, long payerId, long id){
-        if(payerId == loginId && userId != loginId){
+        if(payerId == loginId && userId != id){
             this.type = Type.TAKE;
         }
         if(payerId != loginId && id == loginId){
@@ -39,14 +39,4 @@ public class CalculateListDetail {
             this.type = Type.NO;
         }
     }
-
-    public void inverseType(Type type){
-        if(type.equals(Type.GIVE)){
-            this.type = Type.TAKE;
-        }
-        if(type.equals(Type.TAKE)){
-            this.type = Type.GIVE;
-        }
-    }
-
 }
