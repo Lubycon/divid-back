@@ -35,7 +35,7 @@ public class ExpenseService {
     public GetExpenseResponse getExpense(long id, UUID tripId, long expenseId) {
         Expense expense = expenseRepository.findExpenseByTripIdAndExpenseId(tripId, expenseId);
         User user = userRepository.findById(expense.getPayerId())
-                .orElseThrow(() -> new UserNotFoundException(id + "에 해당하는 유저가 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException(expense.getPayerId() + "에 해당하는 유저가 없습니다."));
         List<GetExpenseDetailResponse> expenseOneDetailResponses = expenseDetailRepository.findAllByExpenseId(expenseId);
         for (GetExpenseDetailResponse getExpenseDetailResponse : expenseOneDetailResponses) {
             if (getExpenseDetailResponse.getUserId() == id) {
@@ -151,7 +151,7 @@ public class ExpenseService {
                         .title(response.getTitle())
                         .profileImg(response.getProfileImg())
                         .nickName(response.getNickName())
-                        .calculateListDetails(expenseDetailRepository.findCalculateAllByTripIdAndPayDate(tripId, date))
+                        .calculateListDetails(expenseDetailRepository.findCalculateAllByTripIdAndPayDate(tripId, response.getExpenseId(), date))
                         .build());
             }
             dateResponses.add(CalculateListDateResponse.builder()
