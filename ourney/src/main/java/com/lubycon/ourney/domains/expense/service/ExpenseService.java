@@ -179,11 +179,14 @@ public class ExpenseService {
     public List<CalculateListResponse> modifyCalculateListElement(List<CalculateListResponse> calculateListResponses, long id) {
         if (!calculateListResponses.isEmpty()) {
             for (CalculateListResponse response : calculateListResponses) {
-                if (response.getId() == id) {
-                    response.updateMe();
-                }
                 for (CalculateListDetail detail : response.getCalculateListDetails()) {
                     detail.check(id, detail.getPayerId(), detail.getUserId());
+                }
+                if (response.getId() == id) {
+                    response.updateMe();
+                    for (CalculateListDetail detail : response.getCalculateListDetails()) {
+                        detail.inverseType(detail.getType());
+                    }
                 }
                 response.getCalculateListDetails().stream().filter(r->!r.getType().equals(Type.NO));
             }

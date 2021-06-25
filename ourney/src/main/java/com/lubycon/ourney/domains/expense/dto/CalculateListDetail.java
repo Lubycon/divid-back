@@ -30,11 +30,21 @@ public class CalculateListDetail {
     }
     public void check(long loginId, long payerId, long id){
         if(payerId != loginId && id == loginId){
-            this.type = Type.TAKE;
-        }else if(payerId == loginId && userId != loginId){
             this.type = Type.GIVE;
+        }
+        else if(payerId == loginId && userId != loginId){
+            this.type = Type.TAKE;
         }else{
             this.type = Type.NO;
+        }
+    }
+
+    public void inverseType(Type type){
+        if(type.equals(Type.GIVE)){
+            this.type = Type.TAKE;
+        }
+        if(type.equals(Type.TAKE)){
+            this.type = Type.GIVE;
         }
     }
 
