@@ -5,8 +5,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 @Getter
 public class CalculateSummaryDetail {
     @NotNull

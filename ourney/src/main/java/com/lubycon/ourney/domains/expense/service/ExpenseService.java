@@ -228,9 +228,4 @@ public class ExpenseService {
                 .build();
     }
 
-    @Transactional
-    public void refineCalculateListDetail(){
-
-    }
-
 }
