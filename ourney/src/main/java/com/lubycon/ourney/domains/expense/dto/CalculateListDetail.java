@@ -32,7 +32,7 @@ public class CalculateListDetail {
         if(payerId == loginId && userId != id){
             this.type = Type.TAKE;
         }
-        if(payerId != loginId && id == loginId){
+        else if(payerId != loginId && id == userId){
             this.type = Type.GIVE;
         }
         else{
