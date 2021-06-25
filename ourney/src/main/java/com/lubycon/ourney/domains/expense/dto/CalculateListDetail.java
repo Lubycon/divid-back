@@ -29,12 +29,13 @@ public class CalculateListDetail {
         this.price = price;
     }
     public void check(long loginId, long payerId, long id){
+        if(payerId == loginId && userId != loginId){
+            this.type = Type.TAKE;
+        }
         if(payerId != loginId && id == loginId){
             this.type = Type.GIVE;
         }
-        else if(payerId == loginId && userId != loginId){
-            this.type = Type.TAKE;
-        }else{
+        else{
             this.type = Type.NO;
         }
     }

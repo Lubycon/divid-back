@@ -184,9 +184,6 @@ public class ExpenseService {
                 }
                 if (response.getId() == id) {
                     response.updateMe();
-                    for (CalculateListDetail detail : response.getCalculateListDetails()) {
-                        detail.inverseType(detail.getType());
-                    }
                 }
                 response.getCalculateListDetails().stream().filter(r->!r.getType().equals(Type.NO));
             }
