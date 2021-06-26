@@ -34,6 +34,7 @@ public class CalculateSummaryDetail {
         }
         else if(price < 0){
             this.type = Type.GIVE;
+            this.price = Math.abs(price);
         }
         else{
             this.type = Type.NO;

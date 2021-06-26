@@ -216,6 +216,7 @@ public class ExpenseService {
                     summary.put(detail.getUserId(), (-1)*detail.getPrice());
                 }
             }
+
         }
         for(Map.Entry<Long, Long> entry : summary.entrySet()){
             User user = userRepository.findById(entry.getKey()).orElseThrow(() -> new UserNotFoundException(entry.getKey() + " 값에 해당하는 여행이 없습니다."));
@@ -223,7 +224,7 @@ public class ExpenseService {
                     .profileImg(user.getProfileImg())
                     .nickName(user.getNickName())
                     .userId(id)
-                    .price(Math.abs(summary.get(entry.getKey())))
+                    .price(summary.get(entry.getKey()))
                     .build());
         }
 
