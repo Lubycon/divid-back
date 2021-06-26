@@ -33,7 +33,7 @@ public class CalculateSummaryDetail {
             this.type = Type.TAKE;
             this.price = Math.abs(price);
         }
-        else if(price < 0){
+        else if(price > 0){
             this.type = Type.GIVE;
         }
         else{
