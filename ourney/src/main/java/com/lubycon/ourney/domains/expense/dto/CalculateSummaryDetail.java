@@ -29,12 +29,12 @@ public class CalculateSummaryDetail {
     }
 
     public void check(long price){
-        if(price > 0 ){
+        if(price < 0 ){
             this.type = Type.TAKE;
+            this.price = Math.abs(price);
         }
         else if(price < 0){
             this.type = Type.GIVE;
-            this.price = Math.abs(price);
         }
         else{
             this.type = Type.NO;
