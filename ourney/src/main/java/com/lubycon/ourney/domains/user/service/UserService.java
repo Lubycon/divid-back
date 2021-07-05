@@ -14,6 +14,8 @@ import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +31,10 @@ import java.net.URL;
 public class UserService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public TokenResponse login(LoginRequest request) {
-        log.debug("#######login#######");
+        logger.debug("#######login#######");
         Long userId = userRepository.findIdByKakaoId(request.getKakaoId());
         return jwtService.issue(userId);
     }
