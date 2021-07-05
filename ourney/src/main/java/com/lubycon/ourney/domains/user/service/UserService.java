@@ -77,6 +77,10 @@ public class UserService {
             nickName = properties.getAsJsonObject().get("nickname").getAsString();
             email = kakao_account.getAsJsonObject().get("email").getAsString();
 
+            if(email.isEmpty()){
+                email = "NULL";
+            }
+
             if (userRepository.existsByKakaoId(kakaoId)) {
                 return new LoginRequest(kakaoId, email, nickName, profile, true);
             } else {
