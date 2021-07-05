@@ -23,6 +23,7 @@ public class LoginController {
     @ApiOperation("로그인/회원가입")
     @PostMapping(value = "/kakao")
     public ResponseEntity<JwtResponse> login(@RequestHeader("kakaoAccessToken") String accessToken) {
+        log.debug("#######log#######");
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>> login_AccessToken : "+accessToken);
         LoginRequest userInfo = userService.getUserInfo(accessToken);
 
