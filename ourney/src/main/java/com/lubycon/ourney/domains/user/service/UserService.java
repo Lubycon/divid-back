@@ -13,6 +13,7 @@ import com.lubycon.ourney.domains.user.entity.User;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +25,13 @@ import java.net.URL;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
     public TokenResponse login(LoginRequest request) {
+        log.debug("#######login#######");
         Long userId = userRepository.findIdByKakaoId(request.getKakaoId());
         return jwtService.issue(userId);
     }

@@ -30,9 +30,11 @@ public class LoginController {
         TokenResponse response;
         String message;
         if (userInfo.isMember()) {
+            log.debug("#######log_1#######");
             response = userService.login(userInfo);
             message = ResponseMessages.SUCCESS_LOGIN;
         } else {
+            log.debug("#######log_2#######");
             response = userService.signUp(userInfo);
             message = ResponseMessages.SUCCESS_SIGN_UP;
         }
