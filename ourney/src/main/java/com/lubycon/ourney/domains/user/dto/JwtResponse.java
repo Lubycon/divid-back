@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 public class JwtResponse {
-    @NotNull
+    @Nullable
     private String accessToken;
     @Nullable
     private String refreshToken;

@@ -5,8 +5,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 @Getter
 public class CalculateSummaryDetail {
     @NotNull
@@ -33,6 +31,7 @@ public class CalculateSummaryDetail {
     public void check(long price){
         if(price < 0 ){
             this.type = Type.TAKE;
+            this.price = Math.abs(price);
         }
         else if(price > 0){
             this.type = Type.GIVE;

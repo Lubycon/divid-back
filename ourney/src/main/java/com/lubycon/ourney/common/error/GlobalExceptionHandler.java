@@ -40,4 +40,11 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<ErrorResponse> handleNullPointException(Exception e) {
+        log.error(e.getMessage(), e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.NULL_EXCEPTION);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
 }

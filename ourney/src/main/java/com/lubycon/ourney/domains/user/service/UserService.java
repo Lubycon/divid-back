@@ -13,6 +13,9 @@ import com.lubycon.ourney.domains.user.entity.User;
 import com.lubycon.ourney.domains.user.entity.UserRepository;
 import com.lubycon.ourney.domains.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +27,14 @@ import java.net.URL;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public TokenResponse login(LoginRequest request) {
+        logger.debug("#######login#######");
         Long userId = userRepository.findIdByKakaoId(request.getKakaoId());
         return jwtService.issue(userId);
     }
@@ -70,6 +76,10 @@ public class UserService {
             kakaoId = element.getAsJsonObject().get("id").getAsLong();
             nickName = properties.getAsJsonObject().get("nickname").getAsString();
             email = kakao_account.getAsJsonObject().get("email").getAsString();
+
+            if(email.isEmpty()){
+                email = "NULL";
+            }
 
             if (userRepository.existsByKakaoId(kakaoId)) {
                 return new LoginRequest(kakaoId, email, nickName, profile, true);

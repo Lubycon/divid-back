@@ -8,6 +8,7 @@ public enum ErrorCode {
     INVALID_VALUE_ERROR("Invalid Value"),
     INTERNAL_SERVER_ERROR("Server Error"),
     HANDLE_ACCESS_DENIED("Access is Denied"),
+    NULL_EXCEPTION("Null value")
     ;
 
     private final String message;

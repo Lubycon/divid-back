@@ -34,8 +34,8 @@ public class ExpenseService {
     }
     public GetExpenseResponse getExpense(long id, UUID tripId, long expenseId) {
         Expense expense = expenseRepository.findExpenseByTripIdAndExpenseId(tripId, expenseId);
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id + "에 해당하는 유저가 없습니다."));
+        User user = userRepository.findById(expense.getPayerId())
+                .orElseThrow(() -> new UserNotFoundException(expense.getPayerId() + "에 해당하는 유저가 없습니다."));
         List<GetExpenseDetailResponse> expenseOneDetailResponses = expenseDetailRepository.findAllByExpenseId(expenseId);
         for (GetExpenseDetailResponse getExpenseDetailResponse : expenseOneDetailResponses) {
             if (getExpenseDetailResponse.getUserId() == id) {
@@ -51,6 +51,7 @@ public class ExpenseService {
                 .payerId(expense.getPayerId())
                 .profileImg(user.getProfileImg())
                 .nickName(user.getNickName())
+                .individual(expense.isIndividual())
                 .getExpenseDetails(expenseOneDetailResponses)
                 .build();
     }
@@ -65,8 +66,7 @@ public class ExpenseService {
                 .individual(expenseRequest.isIndividual())
                 .build();
         expenseRepository.save(expense);
-        Long expenseId = expenseRepository.findIdByTitleAndPayDate(expenseRequest.getTitle(), expenseRequest.getPayDate());
-        saveExpenseDetail(expenseRequest.getExpenseDetails(), expenseId);
+        saveExpenseDetail(expenseRequest.getExpenseDetails(), expenseRepository.getMaxExpenseId());
     }
 
     private void saveExpenseDetail(List<ExpenseDetailRequest> expenseDetailRequests, Long expenseId) {
@@ -151,7 +151,7 @@ public class ExpenseService {
                         .title(response.getTitle())
                         .profileImg(response.getProfileImg())
                         .nickName(response.getNickName())
-                        .calculateListDetails(expenseDetailRepository.findCalculateAllByTripIdAndPayDate(tripId, date))
+                        .calculateListDetails(expenseDetailRepository.findCalculateAllByTripIdAndPayDate(tripId, response.getExpenseId(), date))
                         .build());
             }
             dateResponses.add(CalculateListDateResponse.builder()
@@ -163,7 +163,15 @@ public class ExpenseService {
             modifyCalculateListElement(response.getCalculateListDetails(), id);
         }
 
-        dateResponses.stream().sorted();
+        dateResponses.sort((o1, o2) -> {
+            if (o1.getPayDate().isBefore(o2.getPayDate())) {
+                return 1;
+            } else if (o1.getPayDate().isAfter(o2.getPayDate())) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
 
         return dateResponses;
     }
@@ -171,12 +179,18 @@ public class ExpenseService {
     public List<CalculateListResponse> modifyCalculateListElement(List<CalculateListResponse> calculateListResponses, long id) {
         if (!calculateListResponses.isEmpty()) {
             for (CalculateListResponse response : calculateListResponses) {
+                for (CalculateListDetail detail : response.getCalculateListDetails()) {
+                    detail.check(id, detail.getPayerId(), detail.getUserId());
+                    if(detail.getType().equals(Type.GIVE) && detail.getUserId() == id){
+                        User user = userRepository.findById(detail.getPayerId())
+                                .orElseThrow(() -> new TripNotFoundException(detail.getPayerId() + " 값에 해당하는 여행이 없습니다."));
+                        detail.update(user.getProfileImg(), user.getNickName());
+                    }
+                }
                 if (response.getId() == id) {
                     response.updateMe();
                 }
-                for (CalculateListDetail detail : response.getCalculateListDetails()) {
-                    detail.check(id, detail.getPayerId(), detail.getUserId());
-                }
+                response.getCalculateListDetails().stream().filter(r->!r.getType().equals(Type.NO));
             }
         }
 
@@ -202,6 +216,7 @@ public class ExpenseService {
                     summary.put(detail.getUserId(), (-1)*detail.getPrice());
                 }
             }
+
         }
         for(Map.Entry<Long, Long> entry : summary.entrySet()){
             User user = userRepository.findById(entry.getKey()).orElseThrow(() -> new UserNotFoundException(entry.getKey() + " 값에 해당하는 여행이 없습니다."));
@@ -218,6 +233,5 @@ public class ExpenseService {
                 .detailList(responses)
                 .build();
     }
-
 
 }

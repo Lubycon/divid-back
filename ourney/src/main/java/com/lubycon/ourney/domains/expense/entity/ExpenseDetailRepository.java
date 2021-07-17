@@ -28,9 +28,9 @@ public interface ExpenseDetailRepository extends JpaRepository<ExpenseDetail, Lo
     @Query("SELECT new com.lubycon.ourney.domains.expense.dto.CalculateListDetail(u.profileImg, u.nickName, u.id, e.payerId, e.payDate, d.price) " +
             "FROM User u, Expense e, ExpenseDetail d" +
             " WHERE u.id = d.userId AND e.expenseId = d.expenseId" +
-            " AND e.tripId = :tripId AND e.payDate = :payDate AND d.userId <> e.payerId" +
+            " AND e.tripId = :tripId AND e.payDate = :payDate AND d.userId <> e.payerId AND e.expenseId = :expenseId" +
             " ORDER BY e.payDate DESC, e.expenseId DESC, d.expenseId DESC")
-    List<CalculateListDetail> findCalculateAllByTripIdAndPayDate(@Param("tripId") UUID tripId, @Param("payDate") LocalDate payDate);
+    List<CalculateListDetail> findCalculateAllByTripIdAndPayDate(@Param("tripId") UUID tripId, @Param("expenseId") long expenseId, @Param("payDate") LocalDate payDate);
 
     @Query("SELECT new com.lubycon.ourney.domains.expense.dto.CalculateSummaryDetail(u.profileImg, u.nickName, u.id, e.payerId, d.price) " +
             "FROM User u, Expense e, ExpenseDetail d" +

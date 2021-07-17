@@ -20,6 +20,9 @@ public class Trip {
     @GeneratedValue
     private UUID tripId;
 
+    @Column(name = "trip_index")
+    private Long tripIndex;
+
     @Column(name = "trip_name", length = 45, nullable = false)
     private String tripName;
 
@@ -45,7 +48,8 @@ public class Trip {
     private List<Expense> expenses = new ArrayList<>();
 
     @Builder
-    public Trip(String tripName, long ownerId, LocalDate startDate, LocalDate endDate, String inviteCode, boolean end){
+    public Trip(long tripIndex, String tripName, long ownerId, LocalDate startDate, LocalDate endDate, String inviteCode, boolean end){
+        this.tripIndex = tripIndex;
         this.tripName = tripName;
         this.ownerId = ownerId;
         this.startDate = startDate;

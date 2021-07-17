@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -27,14 +28,20 @@ public class CalculateListDetail {
         this.payerId = payerId;
         this.price = price;
     }
+
+    public void update(String profileImg, String nickName){
+        this.profileImg = profileImg;
+        this.nickName = nickName;
+    }
     public void check(long loginId, long payerId, long id){
-        if(payerId != loginId && id == loginId){
-            this.type = Type.GIVE;
-        }else if(payerId == loginId && userId != loginId){
+        if(payerId == loginId && userId != id){
             this.type = Type.TAKE;
-        }else{
+        }
+        else if(payerId != loginId && id == loginId){
+            this.type = Type.GIVE;
+        }
+        else{
             this.type = Type.NO;
         }
     }
-
 }
