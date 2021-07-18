@@ -16,7 +16,7 @@ public interface UserTripMapRepository extends JpaRepository<UserTripMap, Long> 
             "AND m.trip.tripId = :tripId")
     Optional<UserTripMap> findUserTripMapByUserAndTrip(@Param("userId") long userId, @Param("tripId") UUID tripId);
 
-    @Query("SELECT new com.lubycon.ourney.domains.user.dto.UserInfoResponse(M.user.id, M.user.nickName, M.user.profileImg)" +
+    @Query("SELECT new com.lubycon.ourney.domains.user.dto.UserInfoResponse(M.user.id, M.user.name, M.user.profileImg)" +
             "FROM UserTripMap M " +
             "WHERE M.trip.tripId = :tripId")
     List<UserInfoResponse> findAllByTripId(@Param("tripId") UUID tripId);
