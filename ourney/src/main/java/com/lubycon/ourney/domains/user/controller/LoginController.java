@@ -13,14 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/oauth")
 @RestController
 @Slf4j
 public class LoginController {
     private final UserService userService;
     private final JwtService jwtService;
     @ApiOperation("로그인/회원가입")
-    @PostMapping(value = "/google")
+    @PostMapping(value = "/googleLogin")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request) {
 
         TokenResponse response;

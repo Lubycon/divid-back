@@ -17,7 +17,7 @@ public class User {
     private long id;
 
     @Column(name = "google_id", nullable = false)
-    private long googleId;
+    private String googleId;
 
     @Column(name = "email", length = 45, nullable = false)
     private String email;
@@ -35,7 +35,7 @@ public class User {
     private List<UserTripMap> userTripMaps = new ArrayList<>();
 
     @Builder
-    public User(long googleId, String name, String email, String profileImg){
+    public User(String googleId, String name, String email, String profileImg){
         this.googleId = googleId;
         this.name = name;
         this.email = email;

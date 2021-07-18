@@ -10,7 +10,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     @Query("SELECT U.id FROM User U WHERE U.googleId = :googleId")
-    Long findIdByGoogleId(@Param("googleId") Long googleId);
+    Long findIdByGoogleId(@Param("googleId") String googleId);
 
     @Query("SELECT U.refreshToken FROM User U WHERE U.id = :id")
     String findRefreshTokenById(@Param("id") long id);
