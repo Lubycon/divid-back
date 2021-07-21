@@ -50,7 +50,7 @@ public class ExpenseService {
                 .title(expense.getTitle())
                 .payerId(expense.getPayerId())
                 .profileImg(user.getProfileImg())
-                .nickName(user.getNickName())
+                .name(user.getName())
                 .individual(expense.isIndividual())
                 .getExpenseDetails(expenseOneDetailResponses)
                 .build();
@@ -184,7 +184,7 @@ public class ExpenseService {
                     if(detail.getType().equals(Type.GIVE) && detail.getUserId() == id){
                         User user = userRepository.findById(detail.getPayerId())
                                 .orElseThrow(() -> new TripNotFoundException(detail.getPayerId() + " 값에 해당하는 여행이 없습니다."));
-                        detail.update(user.getProfileImg(), user.getNickName());
+                        detail.update(user.getProfileImg(), user.getName());
                     }
                 }
                 if (response.getId() == id) {
@@ -222,14 +222,14 @@ public class ExpenseService {
             User user = userRepository.findById(entry.getKey()).orElseThrow(() -> new UserNotFoundException(entry.getKey() + " 값에 해당하는 여행이 없습니다."));
             responses.add(CalculateSummaryDetail.builder()
                     .profileImg(user.getProfileImg())
-                    .nickName(user.getNickName())
+                    .nickName(user.getName())
                     .userId(id)
                     .price(summary.get(entry.getKey()))
                     .build());
         }
 
         return CalculateSummaryResponse.builder()
-                .nickName(userRepository.findById(id).get().getNickName())
+                .nickName(userRepository.findById(id).get().getName())
                 .detailList(responses)
                 .build();
     }

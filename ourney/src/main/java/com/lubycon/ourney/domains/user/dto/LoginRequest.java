@@ -8,22 +8,21 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 public class LoginRequest {
+    private String googleId;
     @NotNull
-    private long kakaoId;
-    @Nullable
     private String email;
     @NotNull
-    private String nickName;
-    @NotNull
+    private String name;
+    @Nullable
     private String profile;
     @NotNull
     private boolean isMember;
 
     @Builder
-    public LoginRequest(long kakaoId, String email, String nickName, String profile, boolean isMember){
-        this.kakaoId = kakaoId;
+    public LoginRequest(String googleId, String email, String nickName, String profile, boolean isMember){
+        this.googleId = googleId;
         this.email = email;
-        this.nickName = nickName;
+        this.name = nickName;
         this.profile = profile;
         this.isMember = isMember;
     }

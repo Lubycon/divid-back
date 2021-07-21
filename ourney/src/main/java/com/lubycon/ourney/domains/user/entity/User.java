@@ -16,8 +16,8 @@ public class User {
     @Column(name = "user_id")
     private long id;
 
-    @Column(name = "kakao_id", nullable = false)
-    private long kakaoId;
+    @Column(name = "google_id", nullable = false)
+    private String googleId;
 
     @Column(name = "email", length = 45, nullable = false)
     private String email;
@@ -25,8 +25,8 @@ public class User {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "nickname", nullable = false)
-    private String nickName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "profile_img", nullable = false)
     private String profileImg;
@@ -35,9 +35,9 @@ public class User {
     private List<UserTripMap> userTripMaps = new ArrayList<>();
 
     @Builder
-    public User(long kakaoId, String nickName, String email, String profileImg){
-        this.kakaoId = kakaoId;
-        this.nickName = nickName;
+    public User(String googleId, String name, String email, String profileImg){
+        this.googleId = googleId;
+        this.name = name;
         this.email = email;
         this.profileImg = profileImg;
     }
@@ -47,7 +47,7 @@ public class User {
     }
 
     public void updateMyInfo(String nickName, String profile){
-        this.nickName = nickName;
+        this.name = nickName;
         this.profileImg = profile;
     }
 }
