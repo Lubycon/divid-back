@@ -98,7 +98,7 @@ public class TripService {
 
     public boolean checkTripStatus(LocalDate startDate, LocalDate endDate) {
         LocalDate localDate = LocalDate.now();
-        if (localDate.isAfter(startDate) && localDate.isBefore(endDate)) {
+        if (localDate.isAfter(startDate.minusDays(1)) && localDate.isBefore(endDate.plusDays(1))) {
             return false;
         } else {
             return true;
