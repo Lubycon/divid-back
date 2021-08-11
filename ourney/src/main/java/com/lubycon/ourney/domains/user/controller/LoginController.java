@@ -19,18 +19,38 @@ public class LoginController {
     private final UserService userService;
     private final JwtService jwtService;
     @ApiOperation("로그인/회원가입")
+    @PostMapping(value = "/kakaoLogin")
+    public ResponseEntity<JwtResponse> login(@RequestHeader("kakaoAccessToken") String accessToken) {
+        TokenResponse response = null;
+        String message = null;
+            LoginRequest userInfo = userService.getUserInfo(accessToken);
+            if (userInfo.isMember()) {
+                response = userService.login(userInfo);
+                message = ResponseMessages.SUCCESS_LOGIN;
+            } else {
+                response = userService.signUp(userInfo);
+                message = ResponseMessages.SUCCESS_SIGN_UP;
+            }
+        jwtService.updateToken(response.getUserId(), response.getRefreshToken());
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .accessToken(response.getAccessToken())
+                .refreshToken(response.getRefreshToken())
+                .message(message)
+                .build();
+        return ResponseEntity.ok().body(jwtResponse);
+    }
+
     @PostMapping(value = "/googleLogin")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request) {
-
-        TokenResponse response;
-        String message;
-        if (userService.getUserInfo(request)) {
-            response = userService.login(request);
-            message = ResponseMessages.SUCCESS_LOGIN;
-        } else {
-            response = userService.signUp(request);
-            message = ResponseMessages.SUCCESS_SIGN_UP;
-        }
+        TokenResponse response = null;
+        String message = null;
+            if (userService.checkExistUser(request)) {
+                response = userService.login(request);
+                message = ResponseMessages.SUCCESS_LOGIN;
+            } else {
+                response = userService.signUp(request);
+                message = ResponseMessages.SUCCESS_SIGN_UP;
+            }
         jwtService.updateToken(response.getUserId(), response.getRefreshToken());
         JwtResponse jwtResponse = JwtResponse.builder()
                 .accessToken(response.getAccessToken())
