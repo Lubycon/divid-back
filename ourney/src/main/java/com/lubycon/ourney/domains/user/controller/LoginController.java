@@ -25,10 +25,10 @@ public class LoginController {
         String message = null;
             LoginRequest userInfo = userService.getUserInfo(accessToken);
             if (userInfo.isMember()) {
-                response = userService.login(userInfo);
+                response = userService.kakaoLogin(userInfo);
                 message = ResponseMessages.SUCCESS_LOGIN;
             } else {
-                response = userService.signUp(userInfo);
+                response = userService.kakaoSignUp(userInfo);
                 message = ResponseMessages.SUCCESS_SIGN_UP;
             }
         jwtService.updateToken(response.getUserId(), response.getRefreshToken());
@@ -45,10 +45,10 @@ public class LoginController {
         TokenResponse response = null;
         String message = null;
             if (userService.checkExistUser(request)) {
-                response = userService.login(request);
+                response = userService.googleLogin(request);
                 message = ResponseMessages.SUCCESS_LOGIN;
             } else {
-                response = userService.signUp(request);
+                response = userService.googleSignUp(request);
                 message = ResponseMessages.SUCCESS_SIGN_UP;
             }
         jwtService.updateToken(response.getUserId(), response.getRefreshToken());

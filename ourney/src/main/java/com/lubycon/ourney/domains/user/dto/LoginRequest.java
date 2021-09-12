@@ -31,10 +31,4 @@ public class LoginRequest {
         this.isMember = isMember;
     }
 
-    public String getLoginId(String googleId){
-        if(!googleId.isEmpty()) {
-            this.loginId = googleId;
-        }
-        return loginId;
-    }
 }

@@ -28,12 +28,41 @@ import java.net.URL;
 public class UserService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    public TokenResponse login(LoginRequest request) {
+    public TokenResponse googleLogin(LoginRequest request) {
+        Long userId = userRepository.findIdByGoogleId(request.getGoogleId());
+        return jwtService.issue(userId);
+    }
+    public TokenResponse kakaoLogin(LoginRequest request) {
         Long userId = userRepository.findIdByGoogleId(request.getLoginId());
         return jwtService.issue(userId);
     }
 
-    public TokenResponse signUp(LoginRequest request) {
+    public TokenResponse googleSignUp(LoginRequest request) {
+        User user = User.builder()
+                .loginId(request.getGoogleId())
+                .name(request.getName())
+                .email(request.getEmail())
+                .profileImg(ProfileImg.getRandom().name())
+                .build();
+        userRepository.save(user);
+
+        Long userId = userRepository.findIdByGoogleId(request.getGoogleId());
+        return jwtService.issue(userId);
+    }
+    public TokenResponse kakaoSignUp(LoginRequest request) {
+        User user = User.builder()
+                .loginId(request.getLoginId())
+                .name(request.getName())
+                .email(request.getEmail())
+                .profileImg(ProfileImg.getRandom().name())
+                .build();
+        userRepository.save(user);
+
+        Long userId = userRepository.findIdByGoogleId(request.getLoginId());
+        return jwtService.issue(userId);
+    }
+
+    public TokenResponse google(LoginRequest request) {
         User user = User.builder()
                 .loginId(request.getLoginId())
                 .name(request.getName())
