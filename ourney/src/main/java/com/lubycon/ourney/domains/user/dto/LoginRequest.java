@@ -11,6 +11,7 @@ public class LoginRequest {
     @NotNull
     private LoginType type;
     private String accessToken;
+    private String googleId;
     private String loginId;
     @NotNull
     private String email;
@@ -28,5 +29,12 @@ public class LoginRequest {
         this.name = nickName;
         this.profile = profile;
         this.isMember = isMember;
+    }
+
+    public String getLoginId(String googleId){
+        if(!googleId.isEmpty()) {
+            this.loginId = googleId;
+        }
+        return loginId;
     }
 }
