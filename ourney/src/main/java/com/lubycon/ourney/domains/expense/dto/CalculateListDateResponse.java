@@ -14,12 +14,15 @@ import java.util.List;
 public class CalculateListDateResponse implements Comparator<CalculateListDateResponse>{
     @NotNull
     private LocalDate payDate;
+
+    private long tripTotalPrice;
     @NotNull
     private List<CalculateListResponse> calculateListDetails;
 
     @Builder
-    public CalculateListDateResponse(LocalDate payDate, List<CalculateListResponse> calculateListDetails){
+    public CalculateListDateResponse(LocalDate payDate, long tripTotalPrice, List<CalculateListResponse> calculateListDetails){
         this.payDate = payDate;
+        this.tripTotalPrice = tripTotalPrice;
         this.calculateListDetails = calculateListDetails;
     }
 

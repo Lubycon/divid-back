@@ -144,6 +144,7 @@ public class ExpenseService {
         for(LocalDate date : dates) {
             List<CalculateListResponse> calculateListResponses = new ArrayList<>();
             List<ExpenseListElementResponse> responses = expenseDetailRepository.findAllByTripIdAndPayDate(tripId, date);
+            long dayTotalPrice = 0;
             for(ExpenseListElementResponse response : responses) {
                 calculateListResponses.add(CalculateListResponse.builder()
                         .id(response.getUserId())
@@ -153,9 +154,11 @@ public class ExpenseService {
                         .nickName(response.getNickName())
                         .calculateListDetails(expenseDetailRepository.findCalculateAllByTripIdAndPayDate(tripId, response.getExpenseId(), date))
                         .build());
+                dayTotalPrice += response.getTotalPrice();
             }
             dateResponses.add(CalculateListDateResponse.builder()
                     .payDate(date)
+                    .tripTotalPrice(dayTotalPrice)
                     .calculateListDetails(calculateListResponses)
                     .build());
         }
